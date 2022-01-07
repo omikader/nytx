@@ -1,0 +1,10 @@
+{
+  "hosted-zone:account=624321712571:domainName=nytx.omikader.com:region=us-west-1": {
+    "Id": "/hostedzone/Z02466792BS80DIO3V5G7",
+    "Name": "nytx.omikader.com."
+  },
+  "hosted-zone:account=624321712571:domainName=omikader.com:region=us-west-1": {
+    "Id": "/hostedzone/Z017128925580ZKW3QI5Y",
+    "Name": "omikader.com."
+  }
+}
