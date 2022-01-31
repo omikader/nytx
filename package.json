@@ -27,6 +27,7 @@
     "apollo-datasource": "^3.3.0",
     "apollo-server-lambda": "^3.6.1",
     "aws-cdk-lib": "2.7.0",
-    "graphql": "^16.2.0"
+    "graphql": "^16.2.0",
+    "moment": "^2.29.1"
   }
 }
