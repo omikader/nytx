@@ -17,12 +17,16 @@ export default function main(app: App): void {
   const dynamoStack = new DynamoStack(app, "DynamoStack");
 
   new CronStack(app, "CronStack", {
-    table: dynamoStack.table,
+    usersTable: dynamoStack.usersTable,
+    scoresTable: dynamoStack.scoresTable,
+    ratingsTable: dynamoStack.ratingsTable,
     apikey: apiKeyStack.apikey,
   });
 
   const apiStack = new ApolloStack(app, "ApolloStack", {
-    table: dynamoStack.table,
+    usersTable: dynamoStack.usersTable,
+    scoresTable: dynamoStack.scoresTable,
+    ratingsTable: dynamoStack.ratingsTable,
   });
 
   new ClientStack(app, "ClientStack", {

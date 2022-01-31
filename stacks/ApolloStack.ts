@@ -7,7 +7,9 @@ import {
 } from "@serverless-stack/resources";
 
 export interface ApolloStackProps extends StackProps {
-  table: Table;
+  usersTable: Table;
+  scoresTable: Table;
+  ratingsTable: Table;
 }
 
 export default class ApolloStack extends Stack {
@@ -16,7 +18,7 @@ export default class ApolloStack extends Stack {
   constructor(scope: App, id: string, props?: ApolloStackProps) {
     super(scope, id, props);
 
-    const { table } = props!;
+    const { usersTable, scoresTable, ratingsTable } = props!;
 
     this.api = new ApolloApi(this, "ApolloApi", {
       customDomain:
@@ -25,14 +27,20 @@ export default class ApolloStack extends Stack {
           : undefined,
       defaultFunctionProps: {
         environment: {
-          TABLE_NAME: table.tableName,
+          USERS_TABLE: usersTable.tableName,
+          SCORES_TABLE: scoresTable.tableName,
+          RATINGS_TABLE: ratingsTable.tableName,
         },
       },
       server: "src/apollo/index.handler",
     });
 
-    // Allow the API to access the table
-    this.api.attachPermissions([table, "grantReadData"]);
+    // Allow the API to access the tables
+    this.api.attachPermissions([
+      [usersTable.dynamodbTable, "grantReadData"],
+      [scoresTable.dynamodbTable, "grantReadData"],
+      [ratingsTable.dynamodbTable, "grantReadData"],
+    ]);
 
     // Show the API endpoint in the output
     this.addOutputs({ ApiEndpoint: this.api.customDomainUrl || this.api.url });

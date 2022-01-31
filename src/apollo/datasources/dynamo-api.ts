@@ -7,12 +7,10 @@ import {
 import { unmarshall } from "@aws-sdk/util-dynamodb";
 
 export default class DynamoAPI extends DataSource {
-  readonly tableName: string;
   readonly client: DynamoDBClient;
 
-  constructor(tableName: string) {
+  constructor() {
     super();
-    this.tableName = tableName;
     this.client = new DynamoDBClient({ region: process.env.AWS_REGION });
   }
 
@@ -21,7 +19,7 @@ export default class DynamoAPI extends DataSource {
     if (start > parsedEnd) return [];
 
     const command = new ScanCommand({
-      TableName: this.tableName,
+      TableName: process.env.SCORES_TABLE,
       FilterExpression: "#dt BETWEEN :start AND :end",
       ExpressionAttributeNames: { "#dt": "date" },
       ExpressionAttributeValues: {
@@ -39,7 +37,7 @@ export default class DynamoAPI extends DataSource {
     if (start > parsedEnd) return [];
 
     const command = new QueryCommand({
-      TableName: this.tableName,
+      TableName: process.env.SCORES_TABLE,
       KeyConditionExpression: "#n = :name AND #dt BETWEEN :start AND :end",
       ExpressionAttributeNames: { "#n": "name", "#dt": "date" },
       ExpressionAttributeValues: {
