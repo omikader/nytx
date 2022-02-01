@@ -22,8 +22,8 @@
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.46.0",
     "@aws-sdk/util-dynamodb": "^3.46.0",
-    "@serverless-stack/cli": "0.59.1",
-    "@serverless-stack/resources": "0.59.1",
+    "@serverless-stack/cli": "0.60.11",
+    "@serverless-stack/resources": "0.60.11",
     "apollo-datasource": "^3.3.0",
     "apollo-server-lambda": "^3.6.1",
     "aws-cdk-lib": "2.7.0",
