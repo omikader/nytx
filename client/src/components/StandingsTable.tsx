@@ -36,6 +36,7 @@ export default function StandingsTable({ data }: { data: GetLatestRatings }) {
   );
   const columns = React.useMemo(
     () => [
+      { Header: "#" },
       { Header: "Name", accessor: "user.name" },
       { Header: "Estimate", accessor: "mu" },
       { Header: "Uncertainty", accessor: "sigma" },
@@ -66,12 +67,16 @@ export default function StandingsTable({ data }: { data: GetLatestRatings }) {
         ))}
       </thead>
       <tbody {...getTableBodyProps()}>
-        {rows.map((row) => {
+        {rows.map((row, i) => {
           prepareRow(row);
           return (
             <tr {...row.getRowProps()}>
               {row.cells.map((cell) => {
-                return <Td {...cell.getCellProps()}>{cell.render("Cell")}</Td>;
+                return (
+                  <Td {...cell.getCellProps()}>
+                    {cell.column.Header === "#" ? i + 1 : cell.render("Cell")}
+                  </Td>
+                );
               })}
             </tr>
           );
