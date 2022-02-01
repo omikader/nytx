@@ -1,16 +1,16 @@
-import "./App.css";
-
-import RangedLineChart from "./components/RangedLineChart";
+import GlobalStyle from "./theme/globalStyles";
+import Home from "./pages/Home";
 
 export default function App() {
   return (
-    <div className="App">
+    <>
+      <GlobalStyle />
       <header>
         <h1>omikader + friends' historical NYT mini leaderboard</h1>
       </header>
-      <div className="App-content">
-        <RangedLineChart />
+      <div>
+        <Home />
       </div>
-    </div>
+    </>
   );
 }
