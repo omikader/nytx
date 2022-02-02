@@ -2,7 +2,6 @@ import React from "react";
 import moment from "moment";
 import {
   CartesianGrid,
-  ErrorBar,
   Legend,
   Line,
   LineChart,
@@ -39,7 +38,7 @@ export default function RatingLineChart({ data }: { data: GetRatings }) {
     // Group by date
     data.ratings.reduce((acc, { mu, sigma, eta, date, user: { name } }) => {
       const group = acc[date] || {};
-      group[name] = { mu, sigma, eta };
+      group[name] = { mu, sigma, eta: Math.max(eta, 0) };
       acc[date] = group;
       return acc;
     }, {} as { [date: string]: { [name: string]: { [metric: string]: number } } })
@@ -77,11 +76,10 @@ export default function RatingLineChart({ data }: { data: GetRatings }) {
         />
         <YAxis
           label={{
-            value: "TrueSkill Estimate",
+            value: "TrueSkill Rating",
             angle: -90,
             position: "insideLeft",
           }}
-          domain={[0, 50]}
         />
         <Tooltip
           itemSorter={(item: any) => -item.value}
@@ -94,17 +92,11 @@ export default function RatingLineChart({ data }: { data: GetRatings }) {
             type="linear"
             key={name}
             name={name}
-            dataKey={(datum) => datum[name]?.mu || null}
+            dataKey={(datum) => datum[name]?.eta ?? null}
             stroke={COLORS[index % COLORS.length]}
-            strokeWidth={2}
+            strokeWidth={2.5}
             hide={hiddenMap[name]}
-          >
-            <ErrorBar
-              dataKey={(datum) => datum[name]?.sigma || null}
-              stroke={COLORS[index % COLORS.length]}
-              strokeWidth={1}
-            />
-          </Line>
+          />
         ))}
       </LineChart>
     </ResponsiveContainer>

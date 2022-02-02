@@ -28,7 +28,7 @@ export default function StandingsTable({ data }: { data: GetLatestRatings }) {
         return {
           mu: mu.toFixed(2),
           sigma: sigma.toFixed(2),
-          eta: eta.toFixed(2),
+          eta: Math.max(eta, 0).toFixed(2),
           ...rating,
         };
       }) as any,
@@ -36,19 +36,41 @@ export default function StandingsTable({ data }: { data: GetLatestRatings }) {
   );
   const columns = React.useMemo(
     () => [
-      { Header: "#" },
-      { Header: "Name", accessor: "user.name" },
-      { Header: "Estimate", accessor: "mu" },
-      { Header: "Uncertainty", accessor: "sigma" },
-      { Header: "Rating", accessor: "eta" },
-      { Header: "Games Played", accessor: "user.gamesPlayed" },
-      { Header: "Last Play", accessor: "date" },
+      { Header: "#", id: "idx" },
+      {
+        Header: "Name",
+        id: "name",
+        accessor: "user.name",
+      },
+      { Header: "Rating", id: "rating", accessor: "eta", sortDescFirst: true },
+      {
+        Header: "Estimate",
+        id: "estimate",
+        accessor: "mu",
+        sortDescFirst: true,
+      },
+      { Header: "Uncertainty", id: "uncertainty", accessor: "sigma" },
+      {
+        Header: "Games Played",
+        id: "gp",
+        accessor: "user.gamesPlayed",
+        sortDescFirst: true,
+      },
+      { Header: "Last Play", id: "lp", accessor: "date", sortDescFirst: true },
     ],
     []
   );
+  const initialSortBy = React.useMemo(() => [{ id: "rating", desc: true }], []);
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
-    useTable({ columns, data: tableData }, useSortBy);
+    useTable(
+      {
+        columns,
+        data: tableData,
+        initialState: { sortBy: initialSortBy },
+      },
+      useSortBy
+    );
 
   return (
     <Table {...getTableProps()}>
@@ -74,7 +96,7 @@ export default function StandingsTable({ data }: { data: GetLatestRatings }) {
               {row.cells.map((cell) => {
                 return (
                   <Td {...cell.getCellProps()}>
-                    {cell.column.Header === "#" ? i + 1 : cell.render("Cell")}
+                    {cell.column.id === "idx" ? i + 1 : cell.render("Cell")}
                   </Td>
                 );
               })}

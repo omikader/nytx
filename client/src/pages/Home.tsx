@@ -10,11 +10,11 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 1vh;
 `;
 
 const Item = styled.div`
   margin: auto;
-  margin-bottom: 1vh;
 `;
 
 export default function Home() {
