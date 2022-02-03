@@ -6,7 +6,7 @@ from decimal import Decimal
 import boto3
 import requests
 from bs4 import BeautifulSoup
-from trueskill import Rating, rate
+from trueskill import MU, Rating, SIGMA, rate
 
 
 URL = "https://www.nytimes.com/puzzles/leaderboards"
@@ -24,14 +24,17 @@ def handler(event, context):
     # Parse the response and save the scores
     puzzle_date = soup.find("h3", "lbd-type__date").string
     date = datetime.strptime(puzzle_date, "%A, %B %d, %Y")
-    ranks = {}
-
     dynamodb = boto3.resource("dynamodb")
+
+    ranks = {}
+    no_ranks = []
     scores_table = dynamodb.Table(SCORES_TABLE)
     with scores_table.batch_writer() as batch:
         for score in soup.find_all("div", class_="lbd-score"):
             if "no-rank" in score.attrs["class"]:
-                break
+                name = score.find("p", class_="lbd-score__name")
+                no_ranks.append((name.string or next(name.children)).rstrip())
+                continue
 
             for child in score.children:
                 class_ = child["class"][0]
@@ -56,41 +59,79 @@ def handler(event, context):
                 }
             )
 
-    # Get users' current TrueSkill ratings
+    # Update user data
     users_response = dynamodb.batch_get_item(
         RequestItems={USERS_TABLE: {"Keys": [{"name": name} for name in ranks]}}
     )["Responses"][USERS_TABLE]
-    ratings_response = users_response and dynamodb.batch_get_item(
-        RequestItems={
-            RATINGS_TABLE: {
-                "Keys": [
-                    {"name": user["name"], "date": user["lastPlay"]}
-                    for user in users_response
-                ]
-            }
-        }
-    )["Responses"][RATINGS_TABLE]
-
-    ratings = []
+    users_table = dynamodb.Table(USERS_TABLE)
     for name in ranks:
         try:
-            rating = Rating(
-                *next(
-                    (float(rating["mu"]), float(rating["sigma"]))
-                    for rating in ratings_response
-                    if rating["name"] == name
-                )
+            user = next(user for user in users_response if user["name"] == name)
+            current_streak = user["currentStreak"] + 1
+            max_streak = (
+                current_streak
+                if current_streak > user["maxStreak"]
+                else user["maxStreak"]
             )
         except StopIteration:
-            rating = Rating()
+            current_streak = 1
+            max_streak = 1
+        finally:
+            users_table.update_item(
+                Key={"name": name},
+                UpdateExpression="ADD gamesPlayed :val SET lastPlay = :d, currentStreak = :cs, maxStreak = :ms",
+                ExpressionAttributeValues={
+                    ":val": 1,
+                    ":d": date.strftime("%Y-%m-%d"),
+                    ":cs": current_streak,
+                    ":ms": max_streak,
+                },
+            )
+    for name in no_ranks:
+        users_table.update_item(
+            Key={"name": name},
+            UpdateExpression="SET currentStreak = :val",
+            ExpressionAttributeValues={
+                ":val": 0,
+            },
+        )
 
-        ratings.append((rating,))
+    # Get users' current TrueSkill ratings
+    ratings_response = (
+        users_response
+        and dynamodb.batch_get_item(
+            RequestItems={
+                RATINGS_TABLE: {
+                    "Keys": [
+                        {"name": user["name"], "date": user["lastPlay"]}
+                        for user in users_response
+                    ]
+                }
+            }
+        )["Responses"][RATINGS_TABLE]
+    )
 
-    # Calculate new TrueSkill ratings
-    ratings = rate(ratings, ranks=ranks.values())
+    # Calculate new TrueSkill rankings
+    ratings = rate(
+        [
+            (
+                Rating(
+                    *next(
+                        (
+                            (float(rating["mu"]), float(rating["sigma"]))
+                            for rating in ratings_response
+                            if rating["name"] == name
+                        ),
+                        (MU, SIGMA),
+                    )
+                ),
+            )
+            for name in ranks
+        ],
+        ranks=ranks.values(),
+    )
 
     # Update users' TrueSkill ratings
-    users_table = dynamodb.Table(USERS_TABLE)
     ratings_table = dynamodb.Table(RATINGS_TABLE)
     with ratings_table.batch_writer() as batch:
         for name, (rating,) in zip(ranks, ratings):
@@ -102,13 +143,4 @@ def handler(event, context):
                     "sigma": Decimal(str(rating.sigma)),
                     "eta": Decimal(str(rating.exposure)),
                 }
-            )
-
-            users_table.update_item(
-                Key={"name": name},
-                UpdateExpression="ADD gamesPlayed :val SET lastPlay = :d",
-                ExpressionAttributeValues={
-                    ":val": 1,
-                    ":d": date.strftime("%Y-%m-%d"),
-                },
             )
