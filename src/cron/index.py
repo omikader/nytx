@@ -47,6 +47,10 @@ def handler(event, context):
                     name = (child.string or next(child.children)).rstrip()
                 elif class_ == "lbd-score__time":
                     time = str(child.string)
+                    time_s = sum(
+                        int(segment) * 60**i
+                        for i, segment in enumerate(reversed(time.split(":")))
+                    )
 
             ranks[name] = rank
             batch.put_item(
@@ -55,6 +59,7 @@ def handler(event, context):
                     "date": date.strftime("%Y-%m-%d"),
                     "year": date.year,
                     "time": time,
+                    "time_s": time_s,
                     "rank": rank,
                 }
             )
