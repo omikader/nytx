@@ -38,8 +38,15 @@ export default class DynamoStack extends Stack {
       fields: {
         name: TableFieldType.STRING,
         date: TableFieldType.STRING,
+        year: TableFieldType.NUMBER,
       },
       primaryIndex: { partitionKey: "name", sortKey: "date" },
+      globalIndexes: {
+        yearDateIndex: {
+          partitionKey: "year",
+          sortKey: "date",
+        },
+      },
     });
   }
 }

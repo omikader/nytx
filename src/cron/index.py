@@ -139,6 +139,7 @@ def handler(event, context):
                 Item={
                     "name": name,
                     "date": date.strftime("%Y-%m-%d"),
+                    "year": date.year,
                     "mu": Decimal(str(rating.mu)),
                     "sigma": Decimal(str(rating.sigma)),
                     "eta": Decimal(str(rating.exposure)),
