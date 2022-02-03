@@ -38,7 +38,7 @@ export default function RatingLineChart({ data }: { data: GetRatings }) {
     // Group by date
     data.ratings.reduce((acc, { mu, sigma, eta, date, user: { name } }) => {
       const group = acc[date] || {};
-      group[name] = { mu, sigma, eta: Math.max(eta, 0) };
+      group[name] = { mu, sigma, eta };
       acc[date] = group;
       return acc;
     }, {} as { [date: string]: { [name: string]: { [metric: string]: number } } })
@@ -90,7 +90,7 @@ export default function RatingLineChart({ data }: { data: GetRatings }) {
             type="linear"
             key={name}
             name={name}
-            dataKey={(datum) => datum[name]?.eta ?? null}
+            dataKey={(dtm) => (name in dtm ? Math.max(dtm[name].eta, 0) : null)}
             stroke={COLORS[index % COLORS.length]}
             strokeWidth={2.5}
             hide={hiddenMap[name]}
