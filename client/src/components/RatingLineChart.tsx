@@ -46,9 +46,7 @@ export default function RatingLineChart({ data }: { data: GetRatings }) {
     // Merge date (key) and metrics (values) into one object
     .map(([date, labels]) => {
       return { date, ...labels };
-    })
-    // Sort by date
-    .sort((a, b) => (a.date > b.date ? 1 : -1));
+    });
 
   const labels = Object.keys(Object.assign({}, ...chartData));
   labels.shift(); // remove 'date' key

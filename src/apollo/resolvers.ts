@@ -154,10 +154,20 @@ const resolvers = {
     ) => {
       if (start > end) return [];
 
-      const users = await dataSources.dynamoAPI.fetchUsers();
-      const queries = users.map(({ name }) =>
-        dataSources.dynamoAPI.fetchUserRatingsInDateRange(name, start, end)
-      );
+      const queries = [];
+      for (
+        let iter = moment(start).startOf("year");
+        iter.isBefore(moment(end).endOf("year"));
+        iter.add(1, "year")
+      ) {
+        queries.push(
+          dataSources.dynamoAPI.fetchRatingsInDateRange(
+            iter.format("YYYY"),
+            start,
+            end
+          )
+        );
+      }
 
       return await Promise.all(queries).then((responses) =>
         responses

@@ -119,6 +119,30 @@ export default class DynamoAPI extends DataSource {
     return output.Items?.map((item) => unmarshall(item)) || [];
   };
 
+  fetchRatingsInDateRange = async (
+    year: string,
+    start: string,
+    end: string
+  ) => {
+    const command = new QueryCommand({
+      TableName: process.env.RATINGS_TABLE,
+      IndexName: "yearDateIndex",
+      KeyConditionExpression: "#y = :year AND #d BETWEEN :start AND :end",
+      ExpressionAttributeNames: {
+        "#y": "year",
+        "#d": "date",
+      },
+      ExpressionAttributeValues: {
+        ":year": { N: year },
+        ":start": { S: start },
+        ":end": { S: end },
+      },
+    });
+
+    const output = await this.client.send(command);
+    return output.Items?.map((item) => unmarshall(item)) || [];
+  };
+
   fetchLatestUserRatings = async (users: { [key: string]: any }[]) => {
     const keys = users.map(({ name, lastPlay }) => {
       return { ["name"]: { S: name }, ["date"]: { S: lastPlay } };
