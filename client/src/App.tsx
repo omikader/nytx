@@ -8,9 +8,7 @@ export default function App() {
       <header>
         <h1>omikader + friends' historical NYT mini leaderboard</h1>
       </header>
-      <div>
-        <Home />
-      </div>
+      <Home />
     </>
   );
 }
