@@ -13,10 +13,6 @@ const Container = styled.div`
   gap: 1vh;
 `;
 
-const Item = styled.div`
-  margin: auto;
-`;
-
 export default function Home() {
   const [range, setRange] = React.useState("1,w");
   const onChange = (newRange: string) => {
@@ -25,13 +21,9 @@ export default function Home() {
 
   return (
     <Container>
-      <Item>
-        <RangeRadioButtonGroup range={range} onChange={onChange} />
-      </Item>
-      <Item>
-        {range[0] === "0" && <StandingsTableContainer />}
-        {range[0] !== "0" && <RatingLineChartContainer range={range} />}
-      </Item>
+      <RangeRadioButtonGroup range={range} onChange={onChange} />
+      {range === "1,d" && <StandingsTableContainer />}
+      {range !== "1,d" && <RatingLineChartContainer range={range} />}
     </Container>
   );
 }

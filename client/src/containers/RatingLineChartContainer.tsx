@@ -5,7 +5,7 @@ import { useQuery } from "@apollo/client";
 import RatingLineChart from "../components/RatingLineChart";
 import Spinner from "../components/Spinner";
 import logo from "../logo.svg";
-import { GetRatings, RATINGS } from "../api/graphql";
+import { GetLeaderboards, LEADERBOARDS } from "../api/graphql";
 
 const Parent = styled.div`
   width: 90vw;
@@ -19,15 +19,29 @@ export default function RatingLineChartContainer({ range }: { range: string }) {
     .subtract(...range.split(","))
     .format("YYYY-MM-DD");
 
-  const { loading, error, data } = useQuery<GetRatings>(RATINGS, {
+  const { loading, error, data } = useQuery<GetLeaderboards>(LEADERBOARDS, {
     variables: { start: startDate, end: endDate.format("YYYY-MM-DD") },
   });
 
   if (loading) return <Spinner src={logo} alt="logo" />;
   if (error) return <p>Error! ${error.message}</p>;
+
   return (
     <Parent>
-      <RatingLineChart data={data!} />
+      <RatingLineChart
+        data={data!.leaderboards.map(({ date, ratings }) => {
+          return {
+            date,
+            ...ratings.reduce(
+              (acc: { [name: string]: number }, { user, eta }) => {
+                acc[user.name] = eta;
+                return acc;
+              },
+              {}
+            ),
+          };
+        })}
+      />
     </Parent>
   );
 }

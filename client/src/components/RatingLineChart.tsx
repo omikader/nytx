@@ -11,8 +11,6 @@ import {
   YAxis,
 } from "recharts";
 
-import { GetRatings } from "../api/graphql";
-
 const COLORS = [
   "#e6194b",
   "#3cb44b",
@@ -33,22 +31,14 @@ const COLORS = [
 
 const DAYS = ["Su", "M", "Tu", "W", "Th", "F", "Sa"];
 
-export default function RatingLineChart({ data }: { data: GetRatings }) {
-  const chartData = Object.entries(
-    // Group by date
-    data.ratings.reduce((acc, { mu, sigma, eta, date, user: { name } }) => {
-      const group = acc[date] || {};
-      group[name] = { mu, sigma, eta };
-      acc[date] = group;
-      return acc;
-    }, {} as { [date: string]: { [name: string]: { [metric: string]: number } } })
-  )
-    // Merge date (key) and metrics (values) into one object
-    .map(([date, labels]) => {
-      return { date, ...labels };
-    });
-
-  const labels = Object.keys(Object.assign({}, ...chartData));
+export default function RatingLineChart({
+  data,
+}: {
+  data: {
+    [key: string]: any;
+  }[];
+}) {
+  const labels = Object.keys(Object.assign({}, ...data));
   labels.shift(); // remove 'date' key
   const [hiddenMap, setHiddenMap] = React.useState(
     labels.reduce((acc: { [key: string]: boolean }, name: string) => {
@@ -66,7 +56,7 @@ export default function RatingLineChart({ data }: { data: GetRatings }) {
 
   return (
     <ResponsiveContainer>
-      <LineChart data={chartData}>
+      <LineChart data={data}>
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis
           dataKey="date"
@@ -90,7 +80,7 @@ export default function RatingLineChart({ data }: { data: GetRatings }) {
             type="linear"
             key={name}
             name={name}
-            dataKey={(dtm) => (name in dtm ? Math.max(dtm[name].eta, 0) : null)}
+            dataKey={(dtm) => (name in dtm ? Math.max(dtm[name], 0) : null)}
             stroke={COLORS[index % COLORS.length]}
             strokeWidth={2.5}
             hide={hiddenMap[name]}

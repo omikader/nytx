@@ -10,8 +10,8 @@ export default function RangeRadioButtonGroup({
       <input
         type="radio"
         name="range"
-        value={"0,d"}
-        checked={range === "0,d"}
+        value={"1,d"}
+        checked={range === "1,d"}
         onChange={(event) => onChange(event.target.value)}
       />
       1D

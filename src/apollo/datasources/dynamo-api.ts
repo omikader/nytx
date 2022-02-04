@@ -21,15 +21,15 @@ export default class DynamoAPI extends DataSource {
     return output.Items?.map((item) => unmarshall(item)) || [];
   };
 
-  fetchUserScores = async (name: string) => {
+  fetchUserMetrics = async (userName: string, tableName?: string) => {
     const command = new QueryCommand({
-      TableName: process.env.SCORES_TABLE,
+      TableName: tableName,
       KeyConditionExpression: "#n = :name",
       ExpressionAttributeNames: {
         "#n": "name",
       },
       ExpressionAttributeValues: {
-        ":name": { S: name },
+        ":name": { S: userName },
       },
     });
 
@@ -37,20 +37,21 @@ export default class DynamoAPI extends DataSource {
     return output.Items?.map((item) => unmarshall(item)) || [];
   };
 
-  fetchUserScoresInDateRange = async (
-    name: string,
+  fetchUserMetricsInDateRange = async (
+    userName: string,
     start: string,
-    end: string
+    end: string,
+    tableName?: string
   ) => {
     const command = new QueryCommand({
-      TableName: process.env.SCORES_TABLE,
+      TableName: tableName,
       KeyConditionExpression: "#n = :name AND #d BETWEEN :start AND :end",
       ExpressionAttributeNames: {
         "#n": "name",
         "#d": "date",
       },
       ExpressionAttributeValues: {
-        ":name": { S: name },
+        ":name": { S: userName },
         ":start": { S: start },
         ":end": { S: end },
       },
@@ -60,72 +61,14 @@ export default class DynamoAPI extends DataSource {
     return output.Items?.map((item) => unmarshall(item)) || [];
   };
 
-  fetchScoresInDateRange = async (year: string, start: string, end: string) => {
-    const command = new QueryCommand({
-      TableName: process.env.SCORES_TABLE,
-      IndexName: "yearDateIndex",
-      KeyConditionExpression: "#y = :year AND #d BETWEEN :start AND :end",
-      ExpressionAttributeNames: {
-        "#y": "year",
-        "#d": "date",
-      },
-      ExpressionAttributeValues: {
-        ":year": { N: year },
-        ":start": { S: start },
-        ":end": { S: end },
-      },
-    });
-
-    const output = await this.client.send(command);
-    return output.Items?.map((item) => unmarshall(item)) || [];
-  };
-
-  fetchUserRatings = async (name: string) => {
-    const command = new QueryCommand({
-      TableName: process.env.RATINGS_TABLE,
-      KeyConditionExpression: "#n = :name",
-      ExpressionAttributeNames: {
-        "#n": "name",
-      },
-      ExpressionAttributeValues: {
-        ":name": { S: name },
-      },
-    });
-
-    const output = await this.client.send(command);
-    return output.Items?.map((item) => unmarshall(item)) || [];
-  };
-
-  fetchUserRatingsInDateRange = async (
-    name: string,
-    start: string,
-    end: string
-  ) => {
-    const command = new QueryCommand({
-      TableName: process.env.RATINGS_TABLE,
-      KeyConditionExpression: "#n = :name AND #d BETWEEN :start and :end",
-      ExpressionAttributeNames: {
-        "#n": "name",
-        "#d": "date",
-      },
-      ExpressionAttributeValues: {
-        ":name": { S: name },
-        ":start": { S: start },
-        ":end": { S: end },
-      },
-    });
-
-    const output = await this.client.send(command);
-    return output.Items?.map((item) => unmarshall(item)) || [];
-  };
-
-  fetchRatingsInDateRange = async (
+  fetchMetricsInDateRange = async (
     year: string,
     start: string,
-    end: string
+    end: string,
+    tableName?: string
   ) => {
     const command = new QueryCommand({
-      TableName: process.env.RATINGS_TABLE,
+      TableName: tableName,
       IndexName: "yearDateIndex",
       KeyConditionExpression: "#y = :year AND #d BETWEEN :start AND :end",
       ExpressionAttributeNames: {

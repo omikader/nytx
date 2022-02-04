@@ -2,12 +2,12 @@ import { gql } from "apollo-server-lambda";
 
 export const typeDefs = gql`
   type Query {
+    "Fetch all users"
+    users: [User]!
     "Fetch all of a user's scores"
     userScores(name: String!): [Score]!
     "Fetch a user's scores within a YYYY-MM-DD date range"
     userScoresInDateRange(name: String!, start: String!, end: String!): [Score]!
-    "Fetch all puzzle leaderboards within a YYYY-MM-DD date range"
-    leaderboards(start: String!, end: String!): [Leaderboard]!
     "Fetch all of a user's ratings"
     userRatings(name: String!): [Rating]!
     "Fetch a user's ratings within a YYYY-MM-DD date range"
@@ -18,8 +18,8 @@ export const typeDefs = gql`
     ): [Rating]!
     "Fetch the latest recorded rating value for all users"
     latestRatings: [Rating]!
-    "Fetch all user ratings within a YYYY-MM-DD date range"
-    ratings(start: String!, end: String!): [Rating]!
+    "Fetch all user leaderboards within a YYYY-MM-DD date range"
+    leaderboards(start: String!, end: String!): [Leaderboard]!
     "Count the number of times a user finished a rank or better"
     countUserFinishesAboveK(name: String!, rank: Int!): Int!
     "Fetch the head-to-head record between two users"
@@ -32,6 +32,10 @@ export const typeDefs = gql`
     name: String!
     "the number of completed puzzles by the user"
     gamesPlayed: Int
+    "the current number of consecutively completed puzzles by the user"
+    currentStreak: Int
+    "the maximum number of consecutively completed puzzles by the user"
+    maxStreak: Int
   }
 
   "A score is the user data from a given puzzle"
@@ -46,14 +50,6 @@ export const typeDefs = gql`
     rank: Int!
   }
 
-  "A leaderboard is a collection of all puzzle scores from a single date"
-  type Leaderboard {
-    "the puzzle date, in YYYY-MM-DD format"
-    date: String!
-    "the scores associated with that puzzle"
-    scores: [Score]!
-  }
-
   "A rating is the TrueSkill rating for a particular user on a particular date"
   type Rating {
     "the user to which the rating belongs"
@@ -66,6 +62,16 @@ export const typeDefs = gql`
     sigma: Float!
     "the conservative TrueSkill estimate"
     eta: Float!
+  }
+
+  "A leaderboard is a collection of all puzzle metrics from a single date"
+  type Leaderboard {
+    "the puzzle date, in YYYY-MM-DD format"
+    date: String!
+    "the users scores associated with the puzzle"
+    scores: [Score]!
+    "the updated user ratings after the puzzle"
+    ratings: [Rating]!
   }
 
   "A record represents the head-to-head standings between name1 and name2"

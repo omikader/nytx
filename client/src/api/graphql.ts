@@ -1,26 +1,5 @@
 import { gql } from "@apollo/client";
 
-export interface User {
-  name: string;
-  gamesPlayed?: number;
-}
-
-export interface Rating {
-  user: User;
-  date: string;
-  mu: number;
-  sigma: number;
-  eta: number;
-}
-
-export interface GetRatings {
-  ratings: Rating[];
-}
-
-export interface GetLatestRatings {
-  latestRatings: Rating[];
-}
-
 export const LATEST_RATINGS = gql`
   query GetLatestRatings {
     latestRatings {
@@ -36,16 +15,50 @@ export const LATEST_RATINGS = gql`
   }
 `;
 
-export const RATINGS = gql`
-  query GetRatings($start: String!, $end: String!) {
-    ratings(start: $start, end: $end) {
-      user {
-        name
-      }
+export interface GetLatestRatings {
+  latestRatings: GetLatestRatings_rating[];
+}
+
+export interface GetLatestRatings_rating {
+  user: GetLatestRatings_user;
+  date: string;
+  mu: number;
+  sigma: number;
+  eta: number;
+}
+export interface GetLatestRatings_user {
+  name: string;
+  gamesPlayed: number;
+}
+
+export const LEADERBOARDS = gql`
+  query GetLeaderboards($start: String!, $end: String!) {
+    leaderboards(start: $start, end: $end) {
       date
-      mu
-      sigma
-      eta
+      ratings {
+        user {
+          name
+        }
+        eta
+      }
     }
   }
 `;
+
+export interface GetLeaderboards {
+  leaderboards: GetLeaderboards_leaderboard[];
+}
+
+export interface GetLeaderboards_leaderboard {
+  date: string;
+  ratings: GetLeaderboards_rating[];
+}
+
+export interface GetLeaderboards_rating {
+  user: GetLeaderboards_user;
+  eta: number;
+}
+
+export interface GetLeaderboards_user {
+  name: string;
+}

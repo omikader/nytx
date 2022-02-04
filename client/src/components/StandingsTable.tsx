@@ -23,15 +23,7 @@ const Td = styled.td`
 
 export default function StandingsTable({ data }: { data: GetLatestRatings }) {
   const tableData = React.useMemo(
-    () =>
-      data.latestRatings.map(({ mu, sigma, eta, ...rating }) => {
-        return {
-          mu: mu.toFixed(2),
-          sigma: sigma.toFixed(2),
-          eta: Math.max(eta, 0).toFixed(2),
-          ...rating,
-        };
-      }) as any,
+    () => data.latestRatings as any,
     [data.latestRatings]
   );
   const columns = React.useMemo(
@@ -42,14 +34,26 @@ export default function StandingsTable({ data }: { data: GetLatestRatings }) {
         id: "name",
         accessor: "user.name",
       },
-      { Header: "Rating", id: "rating", accessor: "eta", sortDescFirst: true },
+      {
+        Header: "Rating",
+        id: "rating",
+        accessor: "eta",
+        sortDescFirst: true,
+        Cell: (props: any) => props.value.toFixed(2),
+      },
       {
         Header: "Estimate",
         id: "estimate",
         accessor: "mu",
         sortDescFirst: true,
+        Cell: (props: any) => props.value.toFixed(2),
       },
-      { Header: "Uncertainty", id: "uncertainty", accessor: "sigma" },
+      {
+        Header: "Uncertainty",
+        id: "uncertainty",
+        accessor: "sigma",
+        Cell: (props: any) => props.value.toFixed(2),
+      },
       {
         Header: "Games Played",
         id: "gp",
@@ -73,7 +77,7 @@ export default function StandingsTable({ data }: { data: GetLatestRatings }) {
     );
 
   return (
-    <Table {...getTableProps()}>
+    <Table {...getTableProps()} className="responsiveTable">
       <thead>
         {headerGroups.map((headerGroup) => (
           <tr {...headerGroup.getHeaderGroupProps()}>
@@ -95,7 +99,28 @@ export default function StandingsTable({ data }: { data: GetLatestRatings }) {
             <tr {...row.getRowProps()}>
               {row.cells.map((cell) => {
                 return (
-                  <Td {...cell.getCellProps()}>
+                  <Td {...cell.getCellProps()} className="pivoted">
+                    {headerGroups.map((headerGroup) =>
+                      headerGroup.headers.map((column, i) => {
+                        return cell.column.Header === column.Header ? (
+                          <Th
+                            {...column.getHeaderProps(
+                              column.getSortByToggleProps()
+                            )}
+                            className="tdBefore"
+                          >
+                            {column.render("Header")}
+                            <span>
+                              {column.isSorted
+                                ? column.isSortedDesc
+                                  ? " 🔽"
+                                  : " 🔼"
+                                : ""}
+                            </span>
+                          </Th>
+                        ) : null;
+                      })
+                    )}
                     {cell.column.id === "idx" ? i + 1 : cell.render("Cell")}
                   </Td>
                 );
