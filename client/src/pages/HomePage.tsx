@@ -2,9 +2,8 @@ import moment from "moment";
 
 export default function HomePage() {
   const now = moment.utc();
-  let day = now.day();
+  const day = now.day();
   const time = now.format("HH:mm");
-
   let countdown = now;
   if (day === 0) {
     // Su
@@ -16,33 +15,12 @@ export default function HomePage() {
   } else if (day === 1) {
     // M
     countdown.set({ day: 2, hour: 3, minute: 0, second: 0 });
-  } else if (day === 2) {
-    // Tu
+  } else if (day === 2 || day === 3 || day === 4 || day === 5) {
+    // Tu, W, Th, F
     if (time < "03:00") {
       countdown.set({ hour: 3, minute: 0, second: 0 });
     } else {
-      countdown.set({ day: 3, hour: 3, minute: 0, second: 0 });
-    }
-  } else if (day === 3) {
-    // W
-    if (time < "03:00") {
-      countdown.set({ hour: 3, minute: 0, second: 0 });
-    } else {
-      countdown.set({ day: 4, hour: 3, minute: 0, second: 0 });
-    }
-  } else if (day === 4) {
-    // Th
-    if (time < "03:00") {
-      countdown.set({ hour: 3, minute: 0, second: 0 });
-    } else {
-      countdown.set({ day: 5, hour: 3, minute: 0, second: 0 });
-    }
-  } else if (day === 5) {
-    // F
-    if (time < "03:00") {
-      countdown.set({ hour: 3, minute: 0, second: 0 });
-    } else {
-      countdown.set({ day: 6, hour: 3, minute: 0, second: 0 });
+      countdown.set({ day: day + 1, hour: 3, minute: 0, second: 0 });
     }
   } else if (day === 6) {
     // Sa

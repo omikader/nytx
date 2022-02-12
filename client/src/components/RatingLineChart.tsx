@@ -83,6 +83,7 @@ export default function RatingLineChart({ data }: { data: GetLeaderboards }) {
           <Line
             connectNulls
             type="linear"
+            dot={false}
             key={name}
             name={name}
             dataKey={(dtm) => (name in dtm ? Math.max(dtm[name], 0) : null)}

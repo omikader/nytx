@@ -20,8 +20,8 @@ export default function Navbar() {
           </div>
         </nav>
       </div>
-      <div className="uk-section">
-        <div className="uk-container uk-container-large">
+      <div className="uk-section uk-section-small uk-section-default">
+        <div className="uk-container">
           <Outlet />
         </div>
       </div>

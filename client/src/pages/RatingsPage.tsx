@@ -1,25 +1,11 @@
 import React from "react";
 import moment from "moment";
-import styled from "styled-components";
 import { useQuery } from "@apollo/client";
 
 import QueryResult from "../api/query-result";
 import RangeRadioButtonGroup from "../components/RangeRadioButtonGroup";
 import RatingLineChart from "../components/RatingLineChart";
 import { GetLeaderboards, LEADERBOARDS } from "../api/get-leaderboards";
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 1vh;
-`;
-
-const Parent = styled.div`
-  height: 90vh;
-  width: 90vw;
-`;
 
 export default function RatingsPage() {
   const [range, setRange] = React.useState("1,w");
@@ -34,13 +20,18 @@ export default function RatingsPage() {
   });
 
   return (
-    <Container>
-      <RangeRadioButtonGroup range={range} onChange={setRange} />
-      <QueryResult loading={loading} error={error}>
-        <Parent>
+    <div className="uk-flex uk-flex-column">
+      <div>
+        <RangeRadioButtonGroup range={range} onChange={setRange} />
+      </div>
+      <div
+        uk-height-viewport="offset-top: true"
+        className="uk-height-large uk-width-1-1"
+      >
+        <QueryResult loading={loading} error={error}>
           <RatingLineChart data={data!} />
-        </Parent>
-      </QueryResult>
-    </Container>
+        </QueryResult>
+      </div>
+    </div>
   );
 }
