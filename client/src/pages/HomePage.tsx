@@ -29,7 +29,7 @@ export default function HomePage() {
     } else if (time < "23:00") {
       countdown.set({ hour: 23, minute: 0, second: 0 });
     } else {
-      countdown.set({ day: 0, hour: 23, minute: 0, second: 0 });
+      countdown.set({ day: 7, hour: 23, minute: 0, second: 0 });
     }
   }
 
