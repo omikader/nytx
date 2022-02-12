@@ -1,21 +1,29 @@
 import React from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { useSortBy, useTable } from "react-table";
 
-import { GetLatestRatings } from "../api/graphql";
+import { GetLatestRatings } from "../api/get-latest-ratings";
 
 const Table = styled.table`
   border: solid 1px blue;
 `;
 
-const Th = styled.th`
+const headerStyles = css`
   border-bottom: solid 3px red;
   background: aliceblue;
   color: black;
   font-weight: bold;
 `;
 
-const Td = styled.td`
+const TableHeader = styled.th`
+  ${headerStyles}
+`;
+
+const DivHeader = styled.div`
+  ${headerStyles}
+`;
+
+const TableData = styled.td`
   padding: 10px;
   border: solid 1px gray;
   background: papayawhip;
@@ -40,6 +48,7 @@ export default function StandingsTable({ data }: { data: GetLatestRatings }) {
         accessor: "eta",
         sortDescFirst: true,
         Cell: (props: any) => props.value.toFixed(2),
+        sortType: "number",
       },
       {
         Header: "Estimate",
@@ -47,18 +56,21 @@ export default function StandingsTable({ data }: { data: GetLatestRatings }) {
         accessor: "mu",
         sortDescFirst: true,
         Cell: (props: any) => props.value.toFixed(2),
+        sortType: "number",
       },
       {
         Header: "Uncertainty",
         id: "uncertainty",
         accessor: "sigma",
         Cell: (props: any) => props.value.toFixed(2),
+        sortType: "number",
       },
       {
         Header: "Games Played",
         id: "gp",
         accessor: "user.gamesPlayed",
         sortDescFirst: true,
+        sortType: "number",
       },
       { Header: "Last Play", id: "lp", accessor: "date", sortDescFirst: true },
     ],
@@ -82,12 +94,14 @@ export default function StandingsTable({ data }: { data: GetLatestRatings }) {
         {headerGroups.map((headerGroup) => (
           <tr {...headerGroup.getHeaderGroupProps()}>
             {headerGroup.headers.map((column) => (
-              <Th {...column.getHeaderProps(column.getSortByToggleProps())}>
+              <TableHeader
+                {...column.getHeaderProps(column.getSortByToggleProps())}
+              >
                 {column.render("Header")}
                 <span>
                   {column.isSorted ? (column.isSortedDesc ? " 🔽" : " 🔼") : ""}
                 </span>
-              </Th>
+              </TableHeader>
             ))}
           </tr>
         ))}
@@ -99,11 +113,11 @@ export default function StandingsTable({ data }: { data: GetLatestRatings }) {
             <tr {...row.getRowProps()}>
               {row.cells.map((cell) => {
                 return (
-                  <Td {...cell.getCellProps()} className="pivoted">
+                  <TableData {...cell.getCellProps()} className="pivoted">
                     {headerGroups.map((headerGroup) =>
-                      headerGroup.headers.map((column, i) => {
+                      headerGroup.headers.map((column) => {
                         return cell.column.Header === column.Header ? (
-                          <Th
+                          <DivHeader
                             {...column.getHeaderProps(
                               column.getSortByToggleProps()
                             )}
@@ -117,12 +131,12 @@ export default function StandingsTable({ data }: { data: GetLatestRatings }) {
                                   : " 🔼"
                                 : ""}
                             </span>
-                          </Th>
+                          </DivHeader>
                         ) : null;
                       })
                     )}
                     {cell.column.id === "idx" ? i + 1 : cell.render("Cell")}
-                  </Td>
+                  </TableData>
                 );
               })}
             </tr>

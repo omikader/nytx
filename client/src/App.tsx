@@ -1,14 +1,16 @@
+import { BrowserRouter } from "react-router-dom";
+
 import GlobalStyle from "./theme/globalStyles";
-import Home from "./pages/Home";
+import Router from "./components/Router";
+import { UsersProvider } from "./hooks/useUsers";
 
 export default function App() {
   return (
-    <>
+    <BrowserRouter>
       <GlobalStyle />
-      <header>
-        <h1>omikader + friends' historical NYT mini leaderboard</h1>
-      </header>
-      <Home />
-    </>
+      <UsersProvider>
+        <Router />
+      </UsersProvider>
+    </BrowserRouter>
   );
 }

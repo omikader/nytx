@@ -11,6 +11,8 @@ import {
   YAxis,
 } from "recharts";
 
+import { GetLeaderboards } from "../api/get-leaderboards";
+
 const COLORS = [
   "#e6194b",
   "#3cb44b",
@@ -31,14 +33,17 @@ const COLORS = [
 
 const DAYS = ["Su", "M", "Tu", "W", "Th", "F", "Sa"];
 
-export default function RatingLineChart({
-  data,
-}: {
-  data: {
-    [key: string]: any;
-  }[];
-}) {
-  const labels = Object.keys(Object.assign({}, ...data));
+export default function RatingLineChart({ data }: { data: GetLeaderboards }) {
+  const chartData = data.leaderboards.map(({ date, ratings }) => {
+    return {
+      date,
+      ...ratings.reduce((acc: { [name: string]: number }, { user, eta }) => {
+        acc[user.name] = eta;
+        return acc;
+      }, {}),
+    };
+  });
+  const labels = Object.keys(Object.assign({}, ...chartData));
   labels.shift(); // remove 'date' key
   const [hiddenMap, setHiddenMap] = React.useState(
     labels.reduce((acc: { [key: string]: boolean }, name: string) => {
@@ -56,7 +61,7 @@ export default function RatingLineChart({
 
   return (
     <ResponsiveContainer>
-      <LineChart data={data}>
+      <LineChart data={chartData}>
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis
           dataKey="date"
