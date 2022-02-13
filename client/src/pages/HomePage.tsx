@@ -42,6 +42,13 @@ export default function HomePage() {
         uk-countdown={`date: ${countdown.format()}`}
       >
         <div>
+          <div className="uk-countdown-number uk-countdown-days" />
+          <div className="uk-countdown-label uk-margin-small uk-text-center">
+            Days
+          </div>
+        </div>
+        <div className="uk-countdown-separator">:</div>
+        <div>
           <div className="uk-countdown-number uk-countdown-hours" />
           <div className="uk-countdown-label uk-margin-small uk-text-center">
             Hours

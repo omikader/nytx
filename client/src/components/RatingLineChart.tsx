@@ -11,6 +11,7 @@ import {
   YAxis,
 } from "recharts";
 
+import useWindowDimensions from "../hooks/useWindowDimensions";
 import { GetLeaderboards } from "../api/get-leaderboards";
 
 const COLORS = [
@@ -34,6 +35,7 @@ const COLORS = [
 const DAYS = ["Su", "M", "Tu", "W", "Th", "F", "Sa"];
 
 export default function RatingLineChart({ data }: { data: GetLeaderboards }) {
+  const { width } = useWindowDimensions();
   const chartData = data.leaderboards.map(({ date, ratings }) => {
     return {
       date,
@@ -83,7 +85,7 @@ export default function RatingLineChart({ data }: { data: GetLeaderboards }) {
           <Line
             connectNulls
             type="linear"
-            dot={false}
+            dot={width > 640}
             key={name}
             name={name}
             dataKey={(dtm) => (name in dtm ? Math.max(dtm[name], 0) : null)}
