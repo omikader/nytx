@@ -5,18 +5,28 @@ export default function Navbar() {
     <div>
       <div uk-sticky="sel-target: .uk-navbar-container; cls-active: uk-navbar-sticky">
         <nav className="uk-navbar-container" uk-navbar="true">
-          <div className="uk-navbar-left">
+          <div className="uk-navbar-center">
+            <Link className="uk-navbar-item uk-logo" to="/">
+              nytx
+            </Link>
             <ul className="uk-navbar-nav">
-              <Link className="uk-navbar-item uk-logo" to="/">
-                nytx
-              </Link>
               <li>
                 <Link to="/standings">Standings</Link>
               </li>
               <li>
                 <Link to="/ratings">Ratings</Link>
               </li>
+              <li>
+                <Link to="/h2h">H2H</Link>
+              </li>
             </ul>
+            <a
+              className="uk-navbar-item uk-logo"
+              href="https://github.com/omikader/nytx"
+              target="_blank"
+              rel="noopener noreferrer"
+              uk-icon="github-alt"
+            />
           </div>
         </nav>
       </div>

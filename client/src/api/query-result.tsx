@@ -14,8 +14,11 @@ export default function QueryResult({
 }) {
   if (error)
     return (
-      <div className="uk-position-center">
-        <p className="uk-text-danger">Error! {error.message}</p>
+      <div
+        className="uk-position-center uk-alert-danger uk-padding-small"
+        uk-alert="true"
+      >
+        <p className="uk-margin-remove-bottom">Error! {error.message}</p>
       </div>
     );
   if (loading)

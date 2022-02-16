@@ -20,7 +20,7 @@ export default function RatingsPage() {
   });
 
   return (
-    <div className="uk-flex uk-flex-column">
+    <div className="uk-flex uk-flex-column uk-flex-middle">
       <div>
         <RangeRadioButtonGroup range={range} onChange={setRange} />
       </div>

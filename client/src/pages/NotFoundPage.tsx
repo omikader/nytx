@@ -4,7 +4,7 @@ export default function NotFoundPage() {
       <div>
         <span
           className="uk-margin-small-right"
-          uk-icon="icon: warning; ratio: 3.5"
+          uk-icon="icon: warning; ratio: 3"
         ></span>
       </div>
       <div>
