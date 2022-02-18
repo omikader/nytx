@@ -209,7 +209,7 @@ const resolvers = {
       return await Promise.all(queries).then(([response1, response2]) => {
         let i = 0;
         let j = 0;
-        const record = { wins: 0, losses: 0, ties: 0 };
+        const record = { wins: 0, losses: 0, ties: 0, avg1: 0, avg2: 0 };
         while (i < response1.length && j < response2.length) {
           const score1 = response1[i];
           const score2 = response2[j];
@@ -219,6 +219,8 @@ const resolvers = {
             j++;
           } else {
             i++, j++;
+            record.avg1 += score1.time_s;
+            record.avg2 += score2.time_s;
             if (score1.rank < score2.rank) {
               record.wins += 1;
             } else if (score1.rank > score2.rank) {
@@ -228,6 +230,9 @@ const resolvers = {
             }
           }
         }
+        const total = record.wins + record.losses + record.ties;
+        record.avg1 /= total;
+        record.avg2 /= total;
         return record;
       });
     },

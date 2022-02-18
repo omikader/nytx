@@ -82,5 +82,9 @@ export const typeDefs = gql`
     losses: Int!
     "the number of ties between name1 and name2"
     ties: Int!
+    "the average time to complete all common puzzles for name1"
+    avg1: Float!
+    "the average time to complete all common puzzles for name2"
+    avg2: Float!
   }
 `;

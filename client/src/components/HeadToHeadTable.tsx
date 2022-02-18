@@ -1,5 +1,14 @@
 import { GetHead2Head } from "../api/get-head-to-head";
 
+function toHHMMSS(seconds: number) {
+  const h = Math.floor(seconds / 3600);
+  const m = Math.floor((seconds % 3600) / 60);
+  const s = Math.round(seconds % 60);
+  return [h, m > 9 ? m : h ? "0" + m : m || "0", s > 9 ? s : "0" + s]
+    .filter(Boolean)
+    .join(":");
+}
+
 export default function HeadToHeadTable({
   name1,
   name2,
@@ -9,7 +18,7 @@ export default function HeadToHeadTable({
   name2?: string;
   data?: GetHead2Head;
 }) {
-  if (name1 === undefined || name2 == undefined || data === undefined) {
+  if (name1 === undefined || name2 === undefined || data === undefined) {
     return <></>;
   }
 
@@ -37,6 +46,11 @@ export default function HeadToHeadTable({
           <td>{data.headToHeadRecord.ties}</td>
           <td>Draws</td>
           <td>{data.headToHeadRecord.ties}</td>
+        </tr>
+        <tr>
+          <td>{toHHMMSS(data.headToHeadRecord.avg1)}</td>
+          <td>Avg. Time</td>
+          <td>{toHHMMSS(data.headToHeadRecord.avg2)}</td>
         </tr>
       </tbody>
     </table>
