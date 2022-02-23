@@ -7,7 +7,7 @@ import RangeRadioButtonGroup from "../components/RangeRadioButtonGroup";
 import RatingLineChart from "../components/RatingLineChart";
 import { GetLeaderboards, LEADERBOARDS } from "../api/get-leaderboards";
 
-export default function RatingsPage() {
+export default function RatingsChartPage() {
   const [range, setRange] = React.useState("1,w");
   const endDate = moment();
   const startDate = endDate

@@ -6,8 +6,9 @@ export const LATEST_RATINGS = gql`
       user {
         name
         gamesPlayed
+        currentStreak
+        maxStreak
       }
-      date
       mu
       sigma
       eta
@@ -21,7 +22,6 @@ export interface GetLatestRatings {
 
 export interface GetLatestRatings_rating {
   user: GetLatestRatings_user;
-  date: string;
   mu: number;
   sigma: number;
   eta: number;
@@ -29,4 +29,6 @@ export interface GetLatestRatings_rating {
 export interface GetLatestRatings_user {
   name: string;
   gamesPlayed: number;
+  currentStreak: number;
+  maxStreak: number;
 }

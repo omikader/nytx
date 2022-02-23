@@ -112,19 +112,23 @@ const resolvers = {
     ) => {
       const users = await dataSources.dynamoAPI.fetchUsers();
       const ratings = await dataSources.dynamoAPI.fetchLatestUserRatings(users);
-      return users.map(({ name, gamesPlayed, lastPlay }) => {
-        const rating = ratings.find((rating) => rating.name.S === name)!;
-        return {
-          user: {
-            name,
-            gamesPlayed,
-          },
-          date: lastPlay,
-          mu: rating.mu.N,
-          sigma: rating.sigma.N,
-          eta: rating.eta.N,
-        };
-      });
+      return users.map(
+        ({ name, gamesPlayed, lastPlay, currentStreak, maxStreak }) => {
+          const rating = ratings.find((rating) => rating.name.S === name)!;
+          return {
+            user: {
+              name,
+              gamesPlayed,
+              currentStreak,
+              maxStreak,
+            },
+            date: lastPlay,
+            mu: rating.mu.N,
+            sigma: rating.sigma.N,
+            eta: rating.eta.N,
+          };
+        }
+      );
     },
     leaderboards: async (
       _: unknown,
@@ -231,8 +235,10 @@ const resolvers = {
           }
         }
         const total = record.wins + record.losses + record.ties;
-        record.avg1 /= total;
-        record.avg2 /= total;
+        if (total > 0) {
+          record.avg1 /= total;
+          record.avg2 /= total;
+        }
         return record;
       });
     },

@@ -15,8 +15,7 @@ export default function StandingsPage() {
         <StandingsTable data={data!} />
       </QueryResult>
       {width < 640 && (
-        <a
-          href="#"
+        <button
           className="uk-icon-button uk-position-bottom-right uk-position-fixed uk-margin-small-right uk-margin-small-bottom"
           uk-totop="true"
           uk-scroll="true"

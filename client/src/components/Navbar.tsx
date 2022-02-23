@@ -14,18 +14,18 @@ export default function Navbar() {
                 <Link to="/standings">Standings</Link>
               </li>
               <li>
-                <Link to="/ratings">Ratings</Link>
+                <Link to="/chart">Chart</Link>
               </li>
               <li>
                 <Link to="/h2h">H2H</Link>
               </li>
             </ul>
             <a
-              className="uk-navbar-item uk-logo"
+              className="uk-navbar-item"
               href="https://github.com/omikader/nytx"
               target="_blank"
               rel="noopener noreferrer"
-              uk-icon="github-alt"
+              uk-icon="github"
             />
           </div>
         </nav>

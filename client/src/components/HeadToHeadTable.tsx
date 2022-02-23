@@ -1,6 +1,7 @@
 import { GetHead2Head } from "../api/get-head-to-head";
 
 function toHHMMSS(seconds: number) {
+  if (seconds === 0) return "N/A";
   const h = Math.floor(seconds / 3600);
   const m = Math.floor((seconds % 3600) / 60);
   const s = Math.round(seconds % 60);
@@ -44,7 +45,7 @@ export default function HeadToHeadTable({
         </tr>
         <tr>
           <td>{data.headToHeadRecord.ties}</td>
-          <td>Draws</td>
+          <td>Ties</td>
           <td>{data.headToHeadRecord.ties}</td>
         </tr>
         <tr>

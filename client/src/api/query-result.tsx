@@ -1,8 +1,5 @@
 import { ApolloError } from "@apollo/client";
 
-import Spinner from "../components/Spinner";
-import logo from "../logo.svg";
-
 export default function QueryResult({
   children,
   loading,
@@ -12,20 +9,15 @@ export default function QueryResult({
   loading: boolean;
   error?: ApolloError;
 }) {
-  if (error)
+  if (error) {
     return (
-      <div
-        className="uk-position-center uk-alert-danger uk-padding-small"
-        uk-alert="true"
-      >
+      <div className="uk-alert-danger uk-padding-small" uk-alert="true">
         <p className="uk-margin-remove-bottom">Error! {error.message}</p>
       </div>
     );
-  if (loading)
-    return (
-      <div className="uk-position-center">
-        <Spinner src={logo} alt="logo" />
-      </div>
-    );
+  }
+  if (loading) {
+    return <div className="uk-margin-large-top" uk-spinner="ratio: 8" />;
+  }
   return children;
 }

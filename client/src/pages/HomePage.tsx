@@ -1,10 +1,9 @@
 import moment from "moment";
 
 export default function HomePage() {
-  const now = moment.utc();
-  const day = now.day();
-  const time = now.format("HH:mm");
-  let countdown = now;
+  const countdown = moment.utc();
+  const day = countdown.day();
+  const time = countdown.format("HH:mm");
   if (day === 0) {
     // Su
     if (time < "23:00") {
