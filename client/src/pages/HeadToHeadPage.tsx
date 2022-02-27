@@ -17,7 +17,9 @@ export default function HeadToHeadPage() {
     skip: name1 === undefined || name2 === undefined,
   });
 
-  const sortedUsers = [...users].sort((a, b) => (a.name > b.name ? 1 : -1));
+  const sortedUsers = [...users].sort((a, b) =>
+    a.name.localeCompare(b.name, "en", { sensitivity: "base" })
+  );
   return (
     <div>
       <form>
