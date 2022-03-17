@@ -82,9 +82,21 @@ export const typeDefs = gql`
     losses: Int!
     "the number of ties between name1 and name2"
     ties: Int!
-    "the average time to complete all common puzzles for name1"
-    avg1: Float!
-    "the average time to complete all common puzzles for name2"
-    avg2: Float!
+    "the stats for name1 on all common puzzles"
+    stats1: Stats!
+    "the stats for name2 on all common puzzles"
+    stats2: Stats!
+  }
+
+  "Stats are metadata for a particular user on a set of puzzles"
+  type Stats {
+    "the average time to complete a set of puzzles"
+    avg: Float!
+    "the number of first place finishes on a set of puzzles"
+    first: Int!
+    "the number of second place finishes on a set of puzzles"
+    second: Int!
+    "the number of third place finishes on a set of puzzles"
+    third: Int!
   }
 `;

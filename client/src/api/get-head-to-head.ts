@@ -6,8 +6,18 @@ export const HEAD2HEAD = gql`
       wins
       losses
       ties
-      avg1
-      avg2
+      stats1 {
+        avg
+        first
+        second
+        third
+      }
+      stats2 {
+        avg
+        first
+        second
+        third
+      }
     }
   }
 `;
@@ -20,6 +30,13 @@ export interface GetHead2Head_record {
   wins: number;
   losses: number;
   ties: number;
-  avg1: number;
-  avg2: number;
+  stats1: GetHead2Head_record_stats;
+  stats2: GetHead2Head_record_stats;
+}
+
+export interface GetHead2Head_record_stats {
+  avg: number;
+  first: number;
+  second: number;
+  third: number;
 }

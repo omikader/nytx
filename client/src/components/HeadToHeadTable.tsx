@@ -49,9 +49,24 @@ export default function HeadToHeadTable({
           <td>{data.headToHeadRecord.ties}</td>
         </tr>
         <tr>
-          <td>{toHHMMSS(data.headToHeadRecord.avg1)}</td>
+          <td>{toHHMMSS(data.headToHeadRecord.stats1.avg)}</td>
           <td>Avg. Time</td>
-          <td>{toHHMMSS(data.headToHeadRecord.avg2)}</td>
+          <td>{toHHMMSS(data.headToHeadRecord.stats2.avg)}</td>
+        </tr>
+        <tr>
+          <td>{data.headToHeadRecord.stats1.first}</td>
+          <td>🥇</td>
+          <td>{data.headToHeadRecord.stats2.first}</td>
+        </tr>
+        <tr>
+          <td>{data.headToHeadRecord.stats1.second}</td>
+          <td>🥈</td>
+          <td>{data.headToHeadRecord.stats2.second}</td>
+        </tr>
+        <tr>
+          <td>{data.headToHeadRecord.stats1.third}</td>
+          <td>🥉</td>
+          <td>{data.headToHeadRecord.stats2.third}</td>
         </tr>
       </tbody>
     </table>

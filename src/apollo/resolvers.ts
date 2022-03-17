@@ -213,7 +213,13 @@ const resolvers = {
       return await Promise.all(queries).then(([response1, response2]) => {
         let i = 0;
         let j = 0;
-        const record = { wins: 0, losses: 0, ties: 0, avg1: 0, avg2: 0 };
+        const record = {
+          wins: 0,
+          losses: 0,
+          ties: 0,
+          stats1: { avg: 0, first: 0, second: 0, third: 0 },
+          stats2: { avg: 0, first: 0, second: 0, third: 0 },
+        };
         while (i < response1.length && j < response2.length) {
           const score1 = response1[i];
           const score2 = response2[j];
@@ -223,8 +229,14 @@ const resolvers = {
             j++;
           } else {
             i++, j++;
-            record.avg1 += score1.time_s;
-            record.avg2 += score2.time_s;
+            record.stats1.avg += score1.time_s;
+            record.stats2.avg += score2.time_s;
+            if (score1.rank === 1) record.stats1.first += 1;
+            if (score1.rank === 2) record.stats1.second += 1;
+            if (score1.rank === 3) record.stats1.third += 1;
+            if (score2.rank === 1) record.stats2.first += 1;
+            if (score2.rank === 2) record.stats2.second += 1;
+            if (score2.rank === 3) record.stats2.third += 1;
             if (score1.rank < score2.rank) {
               record.wins += 1;
             } else if (score1.rank > score2.rank) {
@@ -236,8 +248,8 @@ const resolvers = {
         }
         const total = record.wins + record.losses + record.ties;
         if (total > 0) {
-          record.avg1 /= total;
-          record.avg2 /= total;
+          record.stats1.avg /= total;
+          record.stats2.avg /= total;
         }
         return record;
       });
