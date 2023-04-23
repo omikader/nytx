@@ -1,38 +1,28 @@
 import {
-  ApolloApi,
-  App,
   ReactStaticSite,
-  Stack,
-  StackProps,
+  StackContext,
+  use,
 } from "@serverless-stack/resources";
 
-export interface ClientStackProps extends StackProps {
-  api: ApolloApi;
-}
+import { ApolloStack } from "./ApolloStack";
 
-export default class ClientStack extends Stack {
-  constructor(scope: App, id: string, props?: ClientStackProps) {
-    super(scope, id, props);
+export const ClientStack = ({ app, stack }: StackContext) => {
+  const { api } = use(ApolloStack);
 
-    const { api } = props!;
-
-    const site = new ReactStaticSite(this, "ReactSite", {
-      customDomain:
-        scope.stage === "prod"
-          ? {
-              domainName: "nytx.omikader.com",
-              domainAlias: "www.nytx.omikader.com",
-              hostedZone: "omikader.com",
-            }
-          : undefined,
-      path: "client",
-      environment: {
-        REACT_APP_API_URL: api.customDomainUrl || api.url,
-        REACT_APP_REGION: scope.region,
+  const site = new ReactStaticSite(stack, "ReactSite", {
+    path: "client",
+    environment: {
+      REACT_APP_API_URL: api.customDomainUrl ?? api.url,
+      REACT_APP_REGION: app.region,
+    },
+    ...(app.stage === "prod" && {
+      customDomain: {
+        domainName: "nytx.omikader.com",
+        domainAlias: "www.nytx.omikader.com",
+        hostedZone: "omikader.com",
       },
-    });
+    }),
+  });
 
-    // Show the url in the output
-    this.addOutputs({ SiteUrl: site.customDomainUrl || site.url });
-  }
-}
+  stack.addOutputs({ SiteUrl: site.customDomainUrl ?? site.url });
+};

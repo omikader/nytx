@@ -1,48 +1,36 @@
-import {
-  ApolloApi,
-  App,
-  Stack,
-  StackProps,
-  Table,
-} from "@serverless-stack/resources";
+import { GraphQLApi, StackContext, use } from "@serverless-stack/resources";
 
-export interface ApolloStackProps extends StackProps {
-  usersTable: Table;
-  scoresTable: Table;
-  ratingsTable: Table;
-}
+import { DynamoStack } from "./DynamoStack";
 
-export default class ApolloStack extends Stack {
-  readonly api;
+export const ApolloStack = ({ app, stack }: StackContext) => {
+  const { usersTable, scoresTable, ratingsTable } = use(DynamoStack);
 
-  constructor(scope: App, id: string, props?: ApolloStackProps) {
-    super(scope, id, props);
-
-    const { usersTable, scoresTable, ratingsTable } = props!;
-
-    this.api = new ApolloApi(this, "ApolloApi", {
-      customDomain:
-        scope.stage === "prod"
-          ? { domainName: "api.nytx.omikader.com", hostedZone: "omikader.com" }
-          : undefined,
-      defaultFunctionProps: {
+  const api = new GraphQLApi(stack, "ApolloApi", {
+    server: "src/apollo/index.handler",
+    defaults: {
+      function: {
         environment: {
           USERS_TABLE: usersTable.tableName,
           SCORES_TABLE: scoresTable.tableName,
           RATINGS_TABLE: ratingsTable.tableName,
         },
       },
-      server: "src/apollo/index.handler",
-    });
+    },
+    ...(app.stage === "prod" && {
+      customDomain: {
+        domainName: "api.nytx.omikader.com",
+        hostedZone: "omikader.com",
+      },
+    }),
+  });
 
-    // Allow the API to access the tables
-    this.api.attachPermissions([
-      [usersTable.dynamodbTable, "grantReadData"],
-      [scoresTable.dynamodbTable, "grantReadData"],
-      [ratingsTable.dynamodbTable, "grantReadData"],
-    ]);
+  // Allow the API to access the tables
+  // Attached separately due to https://github.com/serverless-stack/sst/issues/1832
+  api.attachPermissions([usersTable, "grantReadData"]);
+  api.attachPermissions([scoresTable, "grantReadData"]);
+  api.attachPermissions([ratingsTable, "grantReadData"]);
 
-    // Show the API endpoint in the output
-    this.addOutputs({ ApiEndpoint: this.api.customDomainUrl || this.api.url });
-  }
-}
+  stack.addOutputs({ ApiEndpoint: api.customDomainUrl ?? api.url });
+
+  return { api };
+};

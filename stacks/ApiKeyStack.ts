@@ -1,12 +1,8 @@
-import { App, Stack, StackProps } from "@serverless-stack/resources";
-import { ISecret, Secret } from "aws-cdk-lib/aws-secretsmanager";
+import { Secret } from "aws-cdk-lib/aws-secretsmanager";
+import { StackContext } from "@serverless-stack/resources";
 
-export default class ApiKeyStack extends Stack {
-  readonly apikey: ISecret;
-
-  constructor(scope: App, id: string, props?: StackProps) {
-    super(scope, id, props);
-
-    this.apikey = Secret.fromSecretNameV2(this, "NYT-S", "prod/nytx/apikey");
-  }
-}
+export const ApiKeyStack = ({ stack }: StackContext) => {
+  return {
+    apikey: Secret.fromSecretNameV2(stack, "NYT-S", "prod/nytx/apikey"),
+  };
+};

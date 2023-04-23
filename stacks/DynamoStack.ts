@@ -1,52 +1,40 @@
-import {
-  App,
-  Stack,
-  StackProps,
-  Table,
-  TableFieldType,
-} from "@serverless-stack/resources";
+import { StackContext, Table } from "@serverless-stack/resources";
 
-export default class DynamoStack extends Stack {
-  readonly usersTable: Table;
-  readonly scoresTable: Table;
-  readonly ratingsTable: Table;
+export const DynamoStack = ({ stack }: StackContext) => {
+  const usersTable = new Table(stack, "Users", {
+    fields: { name: "string" },
+    primaryIndex: { partitionKey: "name" },
+  });
 
-  constructor(scope: App, id: string, props?: StackProps) {
-    super(scope, id, props);
-
-    this.usersTable = new Table(this, "Users", {
-      fields: { name: TableFieldType.STRING },
-      primaryIndex: { partitionKey: "name" },
-    });
-
-    this.scoresTable = new Table(this, "Scores", {
-      fields: {
-        name: TableFieldType.STRING,
-        date: TableFieldType.STRING,
-        year: TableFieldType.NUMBER,
+  const scoresTable = new Table(stack, "Scores", {
+    fields: {
+      name: "string",
+      date: "string",
+      year: "number",
+    },
+    primaryIndex: { partitionKey: "name", sortKey: "date" },
+    globalIndexes: {
+      yearDateIndex: {
+        partitionKey: "year",
+        sortKey: "date",
       },
-      primaryIndex: { partitionKey: "name", sortKey: "date" },
-      globalIndexes: {
-        yearDateIndex: {
-          partitionKey: "year",
-          sortKey: "date",
-        },
-      },
-    });
+    },
+  });
 
-    this.ratingsTable = new Table(this, "Ratings", {
-      fields: {
-        name: TableFieldType.STRING,
-        date: TableFieldType.STRING,
-        year: TableFieldType.NUMBER,
+  const ratingsTable = new Table(stack, "Ratings", {
+    fields: {
+      name: "string",
+      date: "string",
+      year: "number",
+    },
+    primaryIndex: { partitionKey: "name", sortKey: "date" },
+    globalIndexes: {
+      yearDateIndex: {
+        partitionKey: "year",
+        sortKey: "date",
       },
-      primaryIndex: { partitionKey: "name", sortKey: "date" },
-      globalIndexes: {
-        yearDateIndex: {
-          partitionKey: "year",
-          sortKey: "date",
-        },
-      },
-    });
-  }
-}
+    },
+  });
+
+  return { usersTable, scoresTable, ratingsTable };
+};
