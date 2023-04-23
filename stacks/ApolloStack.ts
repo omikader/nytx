@@ -1,12 +1,17 @@
-import { GraphQLApi, StackContext, use } from "@serverless-stack/resources";
+import { Api, StackContext, use } from "@serverless-stack/resources";
 
 import { DynamoStack } from "./DynamoStack";
 
 export const ApolloStack = ({ app, stack }: StackContext) => {
   const { usersTable, scoresTable, ratingsTable } = use(DynamoStack);
 
-  const api = new GraphQLApi(stack, "ApolloApi", {
-    server: "src/apollo/index.handler",
+  const api = new Api(stack, "ApolloApi", {
+    routes: {
+      "POST /": {
+        type: "graphql",
+        function: "src/apollo/index.handler",
+      },
+    },
     defaults: {
       function: {
         bind: [usersTable, scoresTable, ratingsTable],

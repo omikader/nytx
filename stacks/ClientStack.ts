@@ -1,16 +1,14 @@
-import {
-  ReactStaticSite,
-  StackContext,
-  use,
-} from "@serverless-stack/resources";
+import { StackContext, StaticSite, use } from "@serverless-stack/resources";
 
 import { ApolloStack } from "./ApolloStack";
 
 export const ClientStack = ({ app, stack }: StackContext) => {
   const { api } = use(ApolloStack);
 
-  const site = new ReactStaticSite(stack, "ReactSite", {
+  const site = new StaticSite(stack, "ReactSite", {
     path: "client",
+    buildCommand: "yarn build",
+    buildOutput: "build",
     environment: {
       REACT_APP_API_URL: api.customDomainUrl ?? api.url,
       REACT_APP_REGION: app.region,
