@@ -1,7 +1,7 @@
 import moment from "moment";
 import { Table } from "@serverless-stack/node/table";
 
-import DynamoAPI from "./datasources/dynamo-api";
+import { DynamoAPI } from "./datasources/dynamo-api";
 
 const { Scores, Ratings } = Table;
 
@@ -9,7 +9,7 @@ interface IDataSources {
   dynamoAPI: DynamoAPI;
 }
 
-const resolvers = {
+export const resolvers = {
   Query: {
     users: async (
       _: unknown,
@@ -17,14 +17,12 @@ const resolvers = {
       { dataSources }: { dataSources: IDataSources }
     ) => {
       const users = await dataSources.dynamoAPI.fetchUsers();
-      return users.map(({ name, gamesPlayed, currentStreak, maxStreak }) => {
-        return {
-          name,
-          gamesPlayed,
-          currentStreak,
-          maxStreak,
-        };
-      });
+      return users.map(({ name, gamesPlayed, currentStreak, maxStreak }) => ({
+        name,
+        gamesPlayed,
+        currentStreak,
+        maxStreak,
+      }));
     },
     userScores: async (
       _: unknown,
@@ -35,14 +33,12 @@ const resolvers = {
         name,
         Scores.tableName
       );
-      return scores.map(({ name, date, time, rank }) => {
-        return {
-          user: { name },
-          date,
-          time,
-          rank,
-        };
-      });
+      return scores.map(({ name, date, time, rank }) => ({
+        user: { name },
+        date,
+        time,
+        rank,
+      }));
     },
     userScoresInDateRange: async (
       _: unknown,
@@ -57,14 +53,12 @@ const resolvers = {
         end,
         Scores.tableName
       );
-      return scores.map(({ name, date, time, rank }) => {
-        return {
-          user: { name },
-          date,
-          time,
-          rank,
-        };
-      });
+      return scores.map(({ name, date, time, rank }) => ({
+        user: { name },
+        date,
+        time,
+        rank,
+      }));
     },
     userRatings: async (
       _: unknown,
@@ -75,15 +69,13 @@ const resolvers = {
         name,
         Ratings.tableName
       );
-      return ratings.map(({ name, date, mu, sigma, eta }) => {
-        return {
-          user: { name },
-          date,
-          mu,
-          sigma,
-          eta,
-        };
-      });
+      return ratings.map(({ name, date, mu, sigma, eta }) => ({
+        user: { name },
+        date,
+        mu,
+        sigma,
+        eta,
+      }));
     },
     userRatingsInDateRange: async (
       _: unknown,
@@ -98,15 +90,13 @@ const resolvers = {
         end,
         Ratings.tableName
       );
-      return ratings.map(({ name, date, mu, sigma, eta }) => {
-        return {
-          user: { name },
-          date,
-          mu,
-          sigma,
-          eta,
-        };
-      });
+      return ratings.map(({ name, date, mu, sigma, eta }) => ({
+        user: { name },
+        date,
+        mu,
+        sigma,
+        eta,
+      }));
     },
     latestRatings: async (
       _: unknown,
@@ -190,9 +180,11 @@ const resolvers = {
                   acc[date] = group;
                   return acc;
                 }, {})
-              ).map(([date, { scores, ratings }]) => {
-                return { date, scores, ratings };
-              })
+              ).map(([date, { scores, ratings }]) => ({
+                date,
+                scores,
+                ratings,
+              }))
             )
             .flat(1)
       );
@@ -259,5 +251,3 @@ const resolvers = {
     },
   },
 };
-
-export default resolvers;

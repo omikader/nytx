@@ -10,7 +10,7 @@ import { unmarshall } from "@aws-sdk/util-dynamodb";
 
 const { Users, Scores, Ratings } = Table;
 
-export default class DynamoAPI extends DataSource {
+export class DynamoAPI extends DataSource {
   readonly client: DynamoDBClient;
 
   constructor() {
@@ -22,7 +22,7 @@ export default class DynamoAPI extends DataSource {
     const command = new ScanCommand({ TableName: Users.tableName });
 
     const output = await this.client.send(command);
-    return output.Items?.map((item) => unmarshall(item)) || [];
+    return output.Items?.map((item) => unmarshall(item)) ?? [];
   };
 
   fetchUserMetrics = async (userName: string, tableName?: string) => {
@@ -38,7 +38,7 @@ export default class DynamoAPI extends DataSource {
     });
 
     const output = await this.client.send(command);
-    return output.Items?.map((item) => unmarshall(item)) || [];
+    return output.Items?.map((item) => unmarshall(item)) ?? [];
   };
 
   fetchUserMetricsInDateRange = async (
@@ -62,7 +62,7 @@ export default class DynamoAPI extends DataSource {
     });
 
     const output = await this.client.send(command);
-    return output.Items?.map((item) => unmarshall(item)) || [];
+    return output.Items?.map((item) => unmarshall(item)) ?? [];
   };
 
   fetchMetricsInDateRange = async (
@@ -87,7 +87,7 @@ export default class DynamoAPI extends DataSource {
     });
 
     const output = await this.client.send(command);
-    return output.Items?.map((item) => unmarshall(item)) || [];
+    return output.Items?.map((item) => unmarshall(item)) ?? [];
   };
 
   fetchLatestUserRatings = async (users: { [key: string]: any }[]) => {
@@ -100,7 +100,7 @@ export default class DynamoAPI extends DataSource {
     });
 
     const output = await this.client.send(command);
-    return output.Responses?.[Ratings.tableName] || [];
+    return output.Responses?.[Ratings.tableName] ?? [];
   };
 
   countUserFinishesAboveK = async (name: string, rank: number) => {
@@ -119,6 +119,6 @@ export default class DynamoAPI extends DataSource {
     });
 
     const output = await this.client.send(command);
-    return output.Count || 0;
+    return output.Count ?? 0;
   };
 }
