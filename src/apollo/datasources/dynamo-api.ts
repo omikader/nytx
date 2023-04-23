@@ -5,7 +5,10 @@ import {
   ScanCommand,
 } from "@aws-sdk/client-dynamodb";
 import { DataSource } from "apollo-datasource";
+import { Table } from "@serverless-stack/node/table";
 import { unmarshall } from "@aws-sdk/util-dynamodb";
+
+const { Users, Scores, Ratings } = Table;
 
 export default class DynamoAPI extends DataSource {
   readonly client: DynamoDBClient;
@@ -16,7 +19,8 @@ export default class DynamoAPI extends DataSource {
   }
 
   fetchUsers = async () => {
-    const command = new ScanCommand({ TableName: process.env.USERS_TABLE });
+    const command = new ScanCommand({ TableName: Users.tableName });
+
     const output = await this.client.send(command);
     return output.Items?.map((item) => unmarshall(item)) || [];
   };
@@ -92,17 +96,16 @@ export default class DynamoAPI extends DataSource {
     });
 
     const command = new BatchGetItemCommand({
-      RequestItems: {
-        [process.env.RATINGS_TABLE as string]: { Keys: keys },
-      },
+      RequestItems: { [Ratings.tableName]: { Keys: keys } },
     });
+
     const output = await this.client.send(command);
-    return output.Responses?.[process.env.RATINGS_TABLE as string] || [];
+    return output.Responses?.[Ratings.tableName] || [];
   };
 
   countUserFinishesAboveK = async (name: string, rank: number) => {
     const command = new QueryCommand({
-      TableName: process.env.SCORES_TABLE,
+      TableName: Scores.tableName,
       KeyConditionExpression: "#n = :name",
       FilterExpression: "#r <= :rank",
       ExpressionAttributeNames: {

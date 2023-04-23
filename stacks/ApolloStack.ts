@@ -9,11 +9,7 @@ export const ApolloStack = ({ app, stack }: StackContext) => {
     server: "src/apollo/index.handler",
     defaults: {
       function: {
-        environment: {
-          USERS_TABLE: usersTable.tableName,
-          SCORES_TABLE: scoresTable.tableName,
-          RATINGS_TABLE: ratingsTable.tableName,
-        },
+        bind: [usersTable, scoresTable, ratingsTable],
       },
     },
     ...(app.stage === "prod" && {
@@ -23,12 +19,6 @@ export const ApolloStack = ({ app, stack }: StackContext) => {
       },
     }),
   });
-
-  // Allow the API to access the tables
-  // Attached separately due to https://github.com/serverless-stack/sst/issues/1832
-  api.attachPermissions([usersTable, "grantReadData"]);
-  api.attachPermissions([scoresTable, "grantReadData"]);
-  api.attachPermissions([ratingsTable, "grantReadData"]);
 
   stack.addOutputs({ ApiEndpoint: api.customDomainUrl ?? api.url });
 

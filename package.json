@@ -22,11 +22,12 @@
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.46.0",
     "@aws-sdk/util-dynamodb": "^3.46.0",
-    "@serverless-stack/cli": "1.0.2",
-    "@serverless-stack/resources": "1.0.2",
+    "@serverless-stack/cli": "1.16",
+    "@serverless-stack/node": "1.16.3",
+    "@serverless-stack/resources": "1.16.3",
     "apollo-datasource": "^3.3.0",
     "apollo-server-lambda": "^3.6.1",
-    "aws-cdk-lib": "2.20.0",
+    "aws-cdk-lib": "2.39.1",
     "graphql": "^16.2.0",
     "moment": "^2.29.1"
   }

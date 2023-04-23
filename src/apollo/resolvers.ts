@@ -1,6 +1,9 @@
 import moment from "moment";
+import { Table } from "@serverless-stack/node/table";
 
 import DynamoAPI from "./datasources/dynamo-api";
+
+const { Scores, Ratings } = Table;
 
 interface IDataSources {
   dynamoAPI: DynamoAPI;
@@ -30,7 +33,7 @@ const resolvers = {
     ) => {
       const scores = await dataSources.dynamoAPI.fetchUserMetrics(
         name,
-        process.env.SCORES_TABLE
+        Scores.tableName
       );
       return scores.map(({ name, date, time, rank }) => {
         return {
@@ -52,7 +55,7 @@ const resolvers = {
         name,
         start,
         end,
-        process.env.SCORES_TABLE
+        Scores.tableName
       );
       return scores.map(({ name, date, time, rank }) => {
         return {
@@ -70,7 +73,7 @@ const resolvers = {
     ) => {
       const ratings = await dataSources.dynamoAPI.fetchUserMetrics(
         name,
-        process.env.RATINGS_TABLE
+        Ratings.tableName
       );
       return ratings.map(({ name, date, mu, sigma, eta }) => {
         return {
@@ -93,7 +96,7 @@ const resolvers = {
         name,
         start,
         end,
-        process.env.RATINGS_TABLE
+        Ratings.tableName
       );
       return ratings.map(({ name, date, mu, sigma, eta }) => {
         return {
@@ -149,7 +152,7 @@ const resolvers = {
             iter.format("YYYY"),
             start,
             end,
-            process.env.SCORES_TABLE
+            Scores.tableName
           )
         );
         ratingQueries.push(
@@ -157,7 +160,7 @@ const resolvers = {
             iter.format("YYYY"),
             start,
             end,
-            process.env.RATINGS_TABLE
+            Ratings.tableName
           )
         );
       }
@@ -207,8 +210,8 @@ const resolvers = {
       { dataSources }: { dataSources: IDataSources }
     ) => {
       const queries = [
-        dataSources.dynamoAPI.fetchUserMetrics(name1, process.env.SCORES_TABLE),
-        dataSources.dynamoAPI.fetchUserMetrics(name2, process.env.SCORES_TABLE),
+        dataSources.dynamoAPI.fetchUserMetrics(name1, Scores.tableName),
+        dataSources.dynamoAPI.fetchUserMetrics(name2, Scores.tableName),
       ];
       return await Promise.all(queries).then(([response1, response2]) => {
         let i = 0;

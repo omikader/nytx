@@ -11,6 +11,7 @@ export const CronStack = ({ stack }: StackContext) => {
     srcPath: "src/cron",
     handler: "index.handler",
     runtime: "python3.8",
+    bind: [usersTable, scoresTable, ratingsTable],
     environment: {
       USERS_TABLE: usersTable.tableName,
       SCORES_TABLE: scoresTable.tableName,
@@ -18,12 +19,6 @@ export const CronStack = ({ stack }: StackContext) => {
       NYTX: apikey.secretValue.toString(),
     },
   });
-
-  // Allow the lambda to access the tables
-  // Attached separately due to https://github.com/serverless-stack/sst/issues/1832
-  lambda.attachPermissions([usersTable, "grantReadWriteData"]);
-  lambda.attachPermissions([scoresTable, "grantWriteData"]);
-  lambda.attachPermissions([ratingsTable, "grantReadWriteData"]);
 
   new Cron(stack, "WeekdayCron", {
     schedule: "cron(55 1 ? * TUE-SAT *)",
