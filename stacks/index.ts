@@ -9,7 +9,7 @@ import { DynamoStack } from "./DynamoStack";
 export default function main(app: App): void {
   // Set default runtime for all functions
   app.setDefaultFunctionProps({
-    runtime: "nodejs14.x",
+    runtime: "nodejs16.x",
   });
 
   app

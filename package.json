@@ -15,15 +15,15 @@
     ]
   },
   "devDependencies": {
-    "@tsconfig/node14": "^1.0.1",
-    "@types/aws-lambda": "^8.10.70",
-    "@types/node": "<15.0.0"
+    "@tsconfig/node16": "^1.0.3",
+    "@types/aws-lambda": "^8.10.70"
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.46.0",
     "@aws-sdk/util-dynamodb": "^3.46.0",
     "@serverless-stack/cli": "1.18.4",
     "@serverless-stack/node": "1.18.4",
+    "@serverless-stack/static-site-env": "1.18.4",
     "@serverless-stack/resources": "1.18.4",
     "apollo-datasource": "^3.3.0",
     "apollo-server-lambda": "^3.6.1",
