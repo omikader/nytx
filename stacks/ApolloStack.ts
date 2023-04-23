@@ -5,8 +5,13 @@ import { DynamoStack } from "./DynamoStack";
 export const ApolloStack = ({ app, stack }: StackContext) => {
   const { usersTable, scoresTable, ratingsTable } = use(DynamoStack);
 
+  // 'GET /' route needed for Apollo Studio
   const api = new Api(stack, "ApolloApi", {
     routes: {
+      "GET /": {
+        type: "graphql",
+        function: "src/apollo/index.handler",
+      },
       "POST /": {
         type: "graphql",
         function: "src/apollo/index.handler",
