@@ -4,6 +4,12 @@ import { DynamoAPI } from "./datasources/dynamo-api";
 import { resolvers } from "./resolvers";
 import { typeDefs } from "./schema";
 
+export interface IContext {
+  dataSources: {
+    dynamoAPI: DynamoAPI;
+  };
+}
+
 const server = new ApolloServer({
   typeDefs,
   resolvers,

@@ -23,7 +23,7 @@ export const typeDefs = gql`
     "Count the number of times a user finished a rank or better"
     countUserFinishesAboveK(name: String!, rank: Int!): Int!
     "Fetch the head-to-head record between two users"
-    headToHeadRecord(name1: String!, name2: String!): Record!
+    headToHeadRecord(name1: String!, name2: String!): Entry!
   }
 
   "A user represents an entity that solves NYT mini puzzles"
@@ -75,7 +75,7 @@ export const typeDefs = gql`
   }
 
   "A record represents the head-to-head standings between name1 and name2"
-  type Record {
+  type Entry {
     "the number of head-to-head victories for name1"
     wins: Int!
     "the number of head-to-head losses for name1"

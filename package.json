@@ -15,6 +15,9 @@
     ]
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "^3.3.1",
+    "@graphql-codegen/typescript": "^3.0.4",
+    "@graphql-codegen/typescript-resolvers": "^3.2.1",
     "@tsconfig/node16": "^1.0.3",
     "@types/aws-lambda": "^8.10.70"
   },
@@ -23,8 +26,8 @@
     "@aws-sdk/util-dynamodb": "^3.46.0",
     "@serverless-stack/cli": "1.18.4",
     "@serverless-stack/node": "1.18.4",
-    "@serverless-stack/static-site-env": "1.18.4",
     "@serverless-stack/resources": "1.18.4",
+    "@serverless-stack/static-site-env": "1.18.4",
     "apollo-datasource": "^3.3.0",
     "apollo-server-lambda": "^3.6.1",
     "aws-cdk-lib": "2.50.0",

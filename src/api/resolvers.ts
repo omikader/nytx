@@ -1,21 +1,13 @@
 import moment from "moment";
 import { Table } from "@serverless-stack/node/table";
 
-import { DynamoAPI } from "./datasources/dynamo-api";
+import { Resolvers } from "./__generated__/resolvers-types";
 
 const { Scores, Ratings } = Table;
 
-interface IDataSources {
-  dynamoAPI: DynamoAPI;
-}
-
-export const resolvers = {
+export const resolvers: Resolvers = {
   Query: {
-    users: async (
-      _: unknown,
-      __: unknown,
-      { dataSources }: { dataSources: IDataSources }
-    ) => {
+    users: async (_, __, { dataSources }) => {
       const users = await dataSources.dynamoAPI.fetchUsers();
       return users.map(({ name, gamesPlayed, currentStreak, maxStreak }) => ({
         name,
@@ -24,11 +16,7 @@ export const resolvers = {
         maxStreak,
       }));
     },
-    userScores: async (
-      _: unknown,
-      { name }: { name: string },
-      { dataSources }: { dataSources: IDataSources }
-    ) => {
+    userScores: async (_, { name }, { dataSources }) => {
       const scores = await dataSources.dynamoAPI.fetchUserMetrics(
         name,
         Scores.tableName
@@ -40,11 +28,7 @@ export const resolvers = {
         rank,
       }));
     },
-    userScoresInDateRange: async (
-      _: unknown,
-      { name, start, end }: { name: string; start: string; end: string },
-      { dataSources }: { dataSources: IDataSources }
-    ) => {
+    userScoresInDateRange: async (_, { name, start, end }, { dataSources }) => {
       if (start > end) return [];
 
       const scores = await dataSources.dynamoAPI.fetchUserMetricsInDateRange(
@@ -60,11 +44,7 @@ export const resolvers = {
         rank,
       }));
     },
-    userRatings: async (
-      _: unknown,
-      { name }: { name: string },
-      { dataSources }: { dataSources: IDataSources }
-    ) => {
+    userRatings: async (_, { name }, { dataSources }) => {
       const ratings = await dataSources.dynamoAPI.fetchUserMetrics(
         name,
         Ratings.tableName
@@ -78,9 +58,9 @@ export const resolvers = {
       }));
     },
     userRatingsInDateRange: async (
-      _: unknown,
-      { name, start, end }: { name: string; start: string; end: string },
-      { dataSources }: { dataSources: IDataSources }
+      _,
+      { name, start, end },
+      { dataSources }
     ) => {
       if (start > end) return [];
 
@@ -98,11 +78,7 @@ export const resolvers = {
         eta,
       }));
     },
-    latestRatings: async (
-      _: unknown,
-      __: unknown,
-      { dataSources }: { dataSources: IDataSources }
-    ) => {
+    latestRatings: async (_, __, { dataSources }) => {
       const users = await dataSources.dynamoAPI.fetchUsers();
       const ratings = await dataSources.dynamoAPI.fetchLatestUserRatings(users);
       return users.map(
@@ -116,18 +92,14 @@ export const resolvers = {
               maxStreak,
             },
             date: lastPlay,
-            mu: rating.mu.N,
-            sigma: rating.sigma.N,
-            eta: rating.eta.N,
+            mu: Number(rating.mu.N),
+            sigma: Number(rating.sigma.N),
+            eta: Number(rating.eta.N),
           };
         }
       );
     },
-    leaderboards: async (
-      _: unknown,
-      { start, end }: { start: string; end: string },
-      { dataSources }: { dataSources: IDataSources }
-    ) => {
+    leaderboards: async (_, { start, end }, { dataSources }) => {
       if (start > end) return [];
 
       const scoreQueries = [];
@@ -190,16 +162,16 @@ export const resolvers = {
       );
     },
     countUserFinishesAboveK: async (
-      _: unknown,
+      _,
       { name, rank }: { name: string; rank: number },
-      { dataSources }: { dataSources: IDataSources }
+      { dataSources }
     ) => {
       return await dataSources.dynamoAPI.countUserFinishesAboveK(name, rank);
     },
     headToHeadRecord: async (
-      _: unknown,
+      _,
       { name1, name2 }: { name1: string; name2: string },
-      { dataSources }: { dataSources: IDataSources }
+      { dataSources }
     ) => {
       const queries = [
         dataSources.dynamoAPI.fetchUserMetrics(name1, Scores.tableName),
