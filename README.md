@@ -10,8 +10,4 @@ This project was bootstrapped with [Create Serverless Stack](https://docs.server
 
 ![infra](images/infra.png)
 
-Learn more about the Serverless Stack.
-
-- [Docs](https://docs.serverless-stack.com)
-- [@serverless-stack/cli](https://docs.serverless-stack.com/packages/cli)
-- [@serverless-stack/resources](https://docs.serverless-stack.com/packages/resources)
+Learn more about the [Serverless Stack](https://docs.serverless-stack.com).
