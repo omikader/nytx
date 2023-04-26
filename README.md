@@ -6,8 +6,6 @@ To solve this problem, I created [`nytx`](https://nytx.omikader.com), a serverle
 
 ## Serverless Stack
 
-This project was bootstrapped with [Create Serverless Stack](https://docs.serverless-stack.com/packages/create-serverless-stack).
+This project was bootstrapped with [Serverless Stack](https://docs.serverless-stack.com).
 
 ![infra](images/infra.png)
-
-Learn more about the [Serverless Stack](https://docs.serverless-stack.com).
