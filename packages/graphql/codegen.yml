@@ -1,0 +1,21 @@
+# This configuration file tells GraphQL Code Generator how
+# to generate types based on our schema.
+schema: "https://api.nytx.omikader.com"
+documents: "../web/src/**/*.gql"
+generates:
+  # Specify where our generated types should live.
+  ../functions/api/src/resolvers-types.ts:
+    plugins:
+      - "typescript"
+      - "typescript-resolvers"
+    config:
+      contextType: "./index#IContext"
+  ../web/src/react-apollo-types.ts:
+    plugins:
+      - "typescript"
+      - "typescript-operations"
+      - "typescript-react-apollo"
+    config:
+      withHooks: true
+      apolloReactHooksImportFrom: "@apollo/client"
+      apolloReactCommonImportFrom: "@apollo/client"

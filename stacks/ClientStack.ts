@@ -6,7 +6,7 @@ export const ClientStack = ({ app, stack }: StackContext) => {
   const { api } = use(ApolloStack);
 
   const site = new StaticSite(stack, "ReactSite", {
-    path: "client",
+    path: "packages/web",
     buildCommand: "yarn build",
     buildOutput: "build",
     environment: {

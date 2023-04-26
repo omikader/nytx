@@ -1,4 +1,4 @@
 {
   "extends": "@tsconfig/node16",
-  "include": ["stacks", "src"]
+  "include": ["stacks", "packages/functions/api"]
 }

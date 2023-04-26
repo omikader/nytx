@@ -78,7 +78,7 @@ export default function RatingLineChart({ data }: { data: GetLeaderboards }) {
         />
         <Tooltip
           itemSorter={(item: any) => -item.value}
-          formatter={(value: number) => value.toFixed(2)}
+          formatter={(value: number) => Number(value.toFixed(2))}
         />
         <Legend onClick={handleOnClick} />
         {labels.map((name: string, index: number) => (

@@ -1,0 +1,13 @@
+{
+  "name": "nytx-api",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.46.0",
+    "@aws-sdk/util-dynamodb": "^3.46.0",
+    "apollo-datasource": "^3.3.0",
+    "apollo-server-lambda": "^3.6.1",
+    "graphql": "^16.5.0",
+    "moment": "^2.29.1"
+  }
+}

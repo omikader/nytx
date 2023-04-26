@@ -8,7 +8,7 @@ export const CronStack = ({ stack }: StackContext) => {
   const { apikey } = use(ApiKeyStack);
 
   const lambda = new Function(stack, "Lambda", {
-    srcPath: "src/cron",
+    srcPath: "packages/functions/cron",
     handler: "index.handler",
     runtime: "python3.8",
     bind: [usersTable, scoresTable, ratingsTable],

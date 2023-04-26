@@ -10,11 +10,11 @@ export const ApolloStack = ({ app, stack }: StackContext) => {
     routes: {
       "GET /": {
         type: "graphql",
-        function: "src/api/index.handler",
+        function: "packages/functions/api/src/index.handler",
       },
       "POST /": {
         type: "graphql",
-        function: "src/api/index.handler",
+        function: "packages/functions/api/src/index.handler",
       },
     },
     defaults: {

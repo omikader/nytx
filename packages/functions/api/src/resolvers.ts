@@ -1,7 +1,7 @@
 import moment from "moment";
 import { Table } from "@serverless-stack/node/table";
 
-import { Resolvers } from "./__generated__/resolvers-types";
+import { Resolvers } from "./resolvers-types";
 
 const { Scores, Ratings } = Table;
 
