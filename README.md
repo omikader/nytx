@@ -8,4 +8,4 @@ To solve this problem, I created [`nytx`](https://nytx.omikader.com), a serverle
 
 This project was bootstrapped with [Serverless Stack](https://docs.serverless-stack.com).
 
-![infra](images/infra.png)
+![infra](infra.png)
