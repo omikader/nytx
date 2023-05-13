@@ -1,12 +1,13 @@
 # This configuration file tells GraphQL Code Generator how
 # to generate types based on our schema.
-schema: "https://api.nytx.omikader.com"
+schema: "./schema.graphql"
 documents: "../web/src/**/*.gql"
 generates:
   # Specify where our generated types should live.
   ../functions/api/src/resolvers-types.ts:
     plugins:
       - "typescript"
+      - "typescript-operations"
       - "typescript-resolvers"
     config:
       contextType: "./index#IContext"
