@@ -1,4 +1,4 @@
-import { StackContext, Table } from "@serverless-stack/resources";
+import { StackContext, Table } from "sst/constructs";
 
 export const DynamoStack = ({ stack }: StackContext) => {
   const usersTable = new Table(stack, "Users", {

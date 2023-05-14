@@ -1,4 +1,4 @@
-import { Api, StackContext, use } from "@serverless-stack/resources";
+import { Api, StackContext, use } from "sst/constructs";
 
 import { DynamoStack } from "./DynamoStack";
 

@@ -1,5 +1,5 @@
 import moment from "moment";
-import { Table } from "@serverless-stack/node/table";
+import { Table } from "sst/node/table";
 
 import { Resolvers } from "./resolvers-types";
 

@@ -1,4 +1,4 @@
-import { StackContext, StaticSite, use } from "@serverless-stack/resources";
+import { StackContext, StaticSite, use } from "sst/constructs";
 
 import { ApolloStack } from "./ApolloStack";
 
@@ -22,5 +22,5 @@ export const ClientStack = ({ app, stack }: StackContext) => {
     }),
   });
 
-  stack.addOutputs({ SiteUrl: site.customDomainUrl ?? site.url });
+  stack.addOutputs({ SiteUrl: site.customDomainUrl ?? site.url ?? "n/a" });
 };

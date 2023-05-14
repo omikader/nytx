@@ -4,7 +4,7 @@ import {
   QueryCommand,
   ScanCommand,
 } from "@aws-sdk/client-dynamodb";
-import { Table } from "@serverless-stack/node/table";
+import { Table } from "sst/node/table";
 import { unmarshall } from "@aws-sdk/util-dynamodb";
 
 const { Users, Scores, Ratings } = Table;

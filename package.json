@@ -13,13 +13,8 @@
     "packages/**"
   ],
   "devDependencies": {
-    "@tsconfig/node16": "^1.0.3"
-  },
-  "dependencies": {
-    "@serverless-stack/cli": "1.18.4",
-    "@serverless-stack/node": "1.18.4",
-    "@serverless-stack/resources": "1.18.4",
-    "@serverless-stack/static-site-env": "1.18.4",
-    "aws-cdk-lib": "2.50.0"
+    "@tsconfig/node16": "^1.0.3",
+    "constructs": "10.1.156",
+    "sst": "2.0"
   }
 }

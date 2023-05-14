@@ -1,5 +1,5 @@
 import { Secret } from "aws-cdk-lib/aws-secretsmanager";
-import { StackContext } from "@serverless-stack/resources";
+import { StackContext } from "sst/constructs";
 
 export const ApiKeyStack = ({ stack }: StackContext) => {
   return {
