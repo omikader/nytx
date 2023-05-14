@@ -5,7 +5,6 @@ const config: CodegenConfig = {
   generates: {
     "../functions/api/src/resolvers-types.ts": {
       config: {
-        useIndexSignature: true,
         contextType: "./index#IContext",
       },
       plugins: ["typescript", "typescript-resolvers"],
