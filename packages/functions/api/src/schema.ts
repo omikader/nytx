@@ -1,6 +1,4 @@
-import { gql } from "apollo-server-lambda";
-
-export const typeDefs = gql`
+export const typeDefs = `#graphql
   type Query {
     "Fetch all users"
     users: [User]!

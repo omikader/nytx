@@ -4,17 +4,15 @@ import {
   QueryCommand,
   ScanCommand,
 } from "@aws-sdk/client-dynamodb";
-import { DataSource } from "apollo-datasource";
 import { Table } from "@serverless-stack/node/table";
 import { unmarshall } from "@aws-sdk/util-dynamodb";
 
 const { Users, Scores, Ratings } = Table;
 
-export class DynamoAPI extends DataSource {
+export class DynamoAPI {
   readonly client: DynamoDBClient;
 
   constructor() {
-    super();
     this.client = new DynamoDBClient({ region: process.env.AWS_REGION });
   }
 

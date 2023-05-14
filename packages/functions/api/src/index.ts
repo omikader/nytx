@@ -1,4 +1,8 @@
-import { ApolloServer } from "apollo-server-lambda";
+import { ApolloServer } from "@apollo/server";
+import {
+  handlers,
+  startServerAndCreateLambdaHandler,
+} from "@as-integrations/aws-lambda";
 
 import { DynamoAPI } from "./datasources/dynamo-api";
 import { resolvers } from "./resolvers";
@@ -10,12 +14,21 @@ export interface IContext {
   };
 }
 
-const server = new ApolloServer({
+const server = new ApolloServer<IContext>({
   typeDefs,
   resolvers,
-  dataSources: () => ({
-    dynamoAPI: new DynamoAPI(),
-  }),
 });
 
-export const handler = server.createHandler();
+export const handler = startServerAndCreateLambdaHandler(
+  server,
+  handlers.createAPIGatewayProxyEventV2RequestHandler(),
+  {
+    context: async () => {
+      return {
+        dataSources: {
+          dynamoAPI: new DynamoAPI(),
+        },
+      };
+    },
+  }
+);

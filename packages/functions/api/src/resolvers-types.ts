@@ -159,7 +159,8 @@ export type User = {
   name: Scalars['String'];
 };
 
-
+export type WithIndex<TObject> = TObject & Record<string, any>;
+export type ResolversObject<TObject> = WithIndex<TObject>;
 
 export type ResolverTypeWrapper<T> = Promise<T> | T;
 
@@ -229,7 +230,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 
 /** Mapping between all available schema types and the resolvers types */
-export type ResolversTypes = {
+export type ResolversTypes = ResolversObject<{
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   Entry: ResolverTypeWrapper<Entry>;
   Float: ResolverTypeWrapper<Scalars['Float']>;
@@ -241,10 +242,10 @@ export type ResolversTypes = {
   Stats: ResolverTypeWrapper<Stats>;
   String: ResolverTypeWrapper<Scalars['String']>;
   User: ResolverTypeWrapper<User>;
-};
+}>;
 
 /** Mapping between all available schema types and the resolvers parents */
-export type ResolversParentTypes = {
+export type ResolversParentTypes = ResolversObject<{
   Boolean: Scalars['Boolean'];
   Entry: Entry;
   Float: Scalars['Float'];
@@ -256,25 +257,25 @@ export type ResolversParentTypes = {
   Stats: Stats;
   String: Scalars['String'];
   User: User;
-};
+}>;
 
-export type EntryResolvers<ContextType = IContext, ParentType extends ResolversParentTypes['Entry'] = ResolversParentTypes['Entry']> = {
+export type EntryResolvers<ContextType = IContext, ParentType extends ResolversParentTypes['Entry'] = ResolversParentTypes['Entry']> = ResolversObject<{
   losses?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   stats1?: Resolver<ResolversTypes['Stats'], ParentType, ContextType>;
   stats2?: Resolver<ResolversTypes['Stats'], ParentType, ContextType>;
   ties?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   wins?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
+}>;
 
-export type LeaderboardResolvers<ContextType = IContext, ParentType extends ResolversParentTypes['Leaderboard'] = ResolversParentTypes['Leaderboard']> = {
+export type LeaderboardResolvers<ContextType = IContext, ParentType extends ResolversParentTypes['Leaderboard'] = ResolversParentTypes['Leaderboard']> = ResolversObject<{
   date?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   ratings?: Resolver<Array<Maybe<ResolversTypes['Rating']>>, ParentType, ContextType>;
   scores?: Resolver<Array<Maybe<ResolversTypes['Score']>>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
+}>;
 
-export type QueryResolvers<ContextType = IContext, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
+export type QueryResolvers<ContextType = IContext, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
   countUserFinishesAboveK?: Resolver<ResolversTypes['Int'], ParentType, ContextType, RequireFields<QueryCountUserFinishesAboveKArgs, 'name' | 'rank'>>;
   headToHeadRecord?: Resolver<ResolversTypes['Entry'], ParentType, ContextType, RequireFields<QueryHeadToHeadRecordArgs, 'name1' | 'name2'>>;
   latestRatings?: Resolver<Array<Maybe<ResolversTypes['Rating']>>, ParentType, ContextType>;
@@ -284,42 +285,42 @@ export type QueryResolvers<ContextType = IContext, ParentType extends ResolversP
   userScores?: Resolver<Array<Maybe<ResolversTypes['Score']>>, ParentType, ContextType, RequireFields<QueryUserScoresArgs, 'name'>>;
   userScoresInDateRange?: Resolver<Array<Maybe<ResolversTypes['Score']>>, ParentType, ContextType, RequireFields<QueryUserScoresInDateRangeArgs, 'end' | 'name' | 'start'>>;
   users?: Resolver<Array<Maybe<ResolversTypes['User']>>, ParentType, ContextType>;
-};
+}>;
 
-export type RatingResolvers<ContextType = IContext, ParentType extends ResolversParentTypes['Rating'] = ResolversParentTypes['Rating']> = {
+export type RatingResolvers<ContextType = IContext, ParentType extends ResolversParentTypes['Rating'] = ResolversParentTypes['Rating']> = ResolversObject<{
   date?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   eta?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   mu?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   sigma?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   user?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
+}>;
 
-export type ScoreResolvers<ContextType = IContext, ParentType extends ResolversParentTypes['Score'] = ResolversParentTypes['Score']> = {
+export type ScoreResolvers<ContextType = IContext, ParentType extends ResolversParentTypes['Score'] = ResolversParentTypes['Score']> = ResolversObject<{
   date?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   rank?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   time?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   user?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
+}>;
 
-export type StatsResolvers<ContextType = IContext, ParentType extends ResolversParentTypes['Stats'] = ResolversParentTypes['Stats']> = {
+export type StatsResolvers<ContextType = IContext, ParentType extends ResolversParentTypes['Stats'] = ResolversParentTypes['Stats']> = ResolversObject<{
   avg?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   first?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   second?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   third?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
+}>;
 
-export type UserResolvers<ContextType = IContext, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
+export type UserResolvers<ContextType = IContext, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = ResolversObject<{
   currentStreak?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   gamesPlayed?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   maxStreak?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
+}>;
 
-export type Resolvers<ContextType = IContext> = {
+export type Resolvers<ContextType = IContext> = ResolversObject<{
   Entry?: EntryResolvers<ContextType>;
   Leaderboard?: LeaderboardResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
@@ -327,5 +328,5 @@ export type Resolvers<ContextType = IContext> = {
   Score?: ScoreResolvers<ContextType>;
   Stats?: StatsResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
-};
+}>;
 
