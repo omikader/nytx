@@ -11,7 +11,6 @@ export const ClientStack = ({ app, stack }: StackContext) => {
     buildOutput: "build",
     environment: {
       REACT_APP_API_URL: api.customDomainUrl ?? api.url,
-      REACT_APP_REGION: app.region,
     },
     ...(app.stage === "prod" && {
       customDomain: {
