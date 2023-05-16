@@ -1,5 +1,7 @@
 import { ApolloError } from "@apollo/client";
 
+import Spinner from "../components/Spinner";
+
 export default function QueryResult({
   children,
   loading,
@@ -17,7 +19,7 @@ export default function QueryResult({
     );
   }
   if (loading) {
-    return <div className="uk-margin-large-top" uk-spinner="ratio: 8" />;
+    return <Spinner />;
   }
   return children;
 }

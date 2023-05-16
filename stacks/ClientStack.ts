@@ -8,9 +8,9 @@ export const ClientStack = ({ app, stack }: StackContext) => {
   const site = new StaticSite(stack, "ReactSite", {
     path: "packages/web",
     buildCommand: "yarn build",
-    buildOutput: "build",
+    buildOutput: "dist",
     environment: {
-      REACT_APP_API_URL: api.customDomainUrl ?? api.url,
+      VITE_API_URL: api.customDomainUrl ?? api.url,
     },
     ...(app.stage === "prod" && {
       customDomain: {
