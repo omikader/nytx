@@ -7,7 +7,7 @@
     "@as-integrations/aws-lambda": "^2.0.1",
     "@aws-sdk/client-dynamodb": "^3.46.0",
     "@aws-sdk/util-dynamodb": "^3.46.0",
-    "graphql": "^16.6.0",
+    "graphql": "16.6.0",
     "moment": "^2.29.1"
   }
 }
