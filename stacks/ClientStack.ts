@@ -21,5 +21,5 @@ export const ClientStack = ({ app, stack }: StackContext) => {
     }),
   });
 
-  stack.addOutputs({ SiteUrl: site.customDomainUrl ?? site.url ?? "n/a" });
+  stack.addOutputs({ SiteUrl: site.customDomainUrl ?? site.url });
 };
