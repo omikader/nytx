@@ -11,8 +11,6 @@ export const CronStack = ({ stack }: StackContext) => {
     handler: "packages/functions/cron/index.handler",
     runtime: "python3.8",
     bind: [usersTable, scoresTable, ratingsTable, NYT_S],
-    // https://stackoverflow.com/questions/65653103/aws-system-manager-getparameters-permission-being-implicitly-denied/71949841#71949841
-    permissions: ["kms:Decrypt"],
   });
 
   new Cron(stack, "WeekdayCron", {
