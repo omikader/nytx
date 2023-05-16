@@ -1,4 +1,3 @@
-import json
 import os
 from datetime import datetime
 from decimal import Decimal
@@ -10,15 +9,19 @@ from trueskill import MU, Rating, SIGMA, rate
 
 
 URL = "https://www.nytimes.com/puzzles/leaderboards"
-COOKIES = json.loads(os.environ["NYTX"])
-USERS_TABLE = os.environ["USERS_TABLE"]
-SCORES_TABLE = os.environ["SCORES_TABLE"]
-RATINGS_TABLE = os.environ["RATINGS_TABLE"]
+USERS_TABLE = os.environ["SST_Table_tableName_Users"]
+SCORES_TABLE = os.environ["SST_Table_tableName_Scores"]
+RATINGS_TABLE = os.environ["SST_Table_tableName_Ratings"]
 
 
 def handler(event, context):
+    # Load secret
+    ssm = boto3.client("ssm")
+    parameter = ssm.get_parameters(Names=["/sst/nytx/prod/Secret/NYT_S/value"], WithDecryption=True)
+    secret = parameter["Parameters"][0]["Value"]
+
     # Scrape
-    response = requests.get(URL, cookies=COOKIES)
+    response = requests.get(URL, cookies={"NYT-S": secret})
     soup = BeautifulSoup(response.text, "html.parser")
 
     # Parse the response and save the scores

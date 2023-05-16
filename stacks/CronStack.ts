@@ -5,18 +5,14 @@ import { DynamoStack } from "./DynamoStack";
 
 export const CronStack = ({ stack }: StackContext) => {
   const { usersTable, scoresTable, ratingsTable } = use(DynamoStack);
-  const { apikey } = use(ApiKeyStack);
+  const { NYT_S } = use(ApiKeyStack);
 
   const lambda = new Function(stack, "Lambda", {
     handler: "packages/functions/cron/index.handler",
     runtime: "python3.8",
-    bind: [usersTable, scoresTable, ratingsTable],
-    environment: {
-      USERS_TABLE: usersTable.tableName,
-      SCORES_TABLE: scoresTable.tableName,
-      RATINGS_TABLE: ratingsTable.tableName,
-      NYTX: apikey.secretValue.toString(),
-    },
+    bind: [usersTable, scoresTable, ratingsTable, NYT_S],
+    // https://stackoverflow.com/questions/65653103/aws-system-manager-getparameters-permission-being-implicitly-denied/71949841#71949841
+    permissions: ["kms:Decrypt"],
   });
 
   new Cron(stack, "WeekdayCron", {
