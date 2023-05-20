@@ -1,6 +1,11 @@
 import { StackContext, Table } from "sst/constructs";
 
 export const DynamoStack = ({ stack }: StackContext) => {
+  const table = new Table(stack, "Table", {
+    fields: { pk: "string", sk: "string" },
+    primaryIndex: { partitionKey: "pk", sortKey: "sk" },
+  });
+
   const usersTable = new Table(stack, "Users", {
     fields: { name: "string" },
     primaryIndex: { partitionKey: "name" },
@@ -36,5 +41,5 @@ export const DynamoStack = ({ stack }: StackContext) => {
     },
   });
 
-  return { usersTable, scoresTable, ratingsTable };
+  return { table, usersTable, scoresTable, ratingsTable };
 };

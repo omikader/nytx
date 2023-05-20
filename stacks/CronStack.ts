@@ -3,14 +3,14 @@ import { Config, Cron, Function, StackContext, use } from "sst/constructs";
 import { DynamoStack } from "./DynamoStack";
 
 export const CronStack = ({ stack }: StackContext) => {
-  const { usersTable, scoresTable, ratingsTable } = use(DynamoStack);
+  const { table } = use(DynamoStack);
 
   const NYT_S = new Config.Secret(stack, "NYT-S");
 
   const lambda = new Function(stack, "Lambda", {
     handler: "packages/functions/cron/index.handler",
     runtime: "python3.8",
-    bind: [usersTable, scoresTable, ratingsTable, NYT_S],
+    bind: [table, NYT_S],
   });
 
   new Cron(stack, "WeekdayCron", {
