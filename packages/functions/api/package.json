@@ -2,12 +2,22 @@
   "name": "nytx-api",
   "version": "0.1.0",
   "private": true,
+  "devDependencies": {
+    "@types/lodash": "^4.14.194",
+    "@types/luxon": "^3.3.0"
+  },
   "dependencies": {
     "@apollo/server": "^4.7.1",
     "@as-integrations/aws-lambda": "^2.0.1",
     "@aws-sdk/client-dynamodb": "^3.46.0",
     "@aws-sdk/util-dynamodb": "^3.46.0",
+    "got": "^12.6.0",
     "graphql": "16.6.0",
-    "moment": "^2.29.1"
+    "graphql-scalars": "^1.22.0",
+    "graphql-tag": "^2.12.6",
+    "lodash": "^4.17.21",
+    "luxon": "^3.3.0",
+    "node-html-parser": "^6.1.5",
+    "ts-pattern": "^4.3.0"
   }
 }

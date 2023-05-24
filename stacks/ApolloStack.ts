@@ -1,9 +1,11 @@
 import { Api, StackContext, use } from "sst/constructs";
 
+import { ApiKeyStack } from "./ApiKeyStack";
 import { DynamoStack } from "./DynamoStack";
 
 export const ApolloStack = ({ app, stack }: StackContext) => {
-  const { usersTable, scoresTable, ratingsTable } = use(DynamoStack);
+  const { NYT_S } = use(ApiKeyStack);
+  const { table } = use(DynamoStack);
 
   // 'GET /' route needed for Apollo Studio
   const api = new Api(stack, "ApolloApi", {
@@ -19,7 +21,7 @@ export const ApolloStack = ({ app, stack }: StackContext) => {
     },
     defaults: {
       function: {
-        bind: [usersTable, scoresTable, ratingsTable],
+        bind: [table, NYT_S],
       },
     },
     ...(app.stage === "prod" && {

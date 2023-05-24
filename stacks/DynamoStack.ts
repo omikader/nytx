@@ -1,45 +1,27 @@
 import { StackContext, Table } from "sst/constructs";
 
 export const DynamoStack = ({ stack }: StackContext) => {
-  const table = new Table(stack, "Table", {
-    fields: { pk: "string", sk: "string" },
-    primaryIndex: { partitionKey: "pk", sortKey: "sk" },
-  });
-
-  const usersTable = new Table(stack, "Users", {
-    fields: { name: "string" },
-    primaryIndex: { partitionKey: "name" },
-  });
-
-  const scoresTable = new Table(stack, "Scores", {
+  const table = new Table(stack, "Entity", {
     fields: {
-      name: "string",
-      date: "string",
-      year: "number",
+      PK: "string",
+      SK: "string",
+      GSI1PK: "string",
+      GSI1SK: "string",
+      GSI2PK: "string",
+      GSI2SK: "string",
     },
-    primaryIndex: { partitionKey: "name", sortKey: "date" },
+    primaryIndex: { partitionKey: "PK", sortKey: "SK" },
     globalIndexes: {
-      yearDateIndex: {
-        partitionKey: "year",
-        sortKey: "date",
+      GSI1: {
+        partitionKey: "GSI1PK",
+        sortKey: "GSI1SK",
+      },
+      GSI2: {
+        partitionKey: "GSI2PK",
+        sortKey: "GSI2SK",
       },
     },
   });
 
-  const ratingsTable = new Table(stack, "Ratings", {
-    fields: {
-      name: "string",
-      date: "string",
-      year: "number",
-    },
-    primaryIndex: { partitionKey: "name", sortKey: "date" },
-    globalIndexes: {
-      yearDateIndex: {
-        partitionKey: "year",
-        sortKey: "date",
-      },
-    },
-  });
-
-  return { table, usersTable, scoresTable, ratingsTable };
+  return { table };
 };

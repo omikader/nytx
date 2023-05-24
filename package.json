@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "sst start",
+    "dev": "sst dev",
     "build": "sst build",
     "deploy": "sst deploy",
     "remove": "sst remove"
@@ -15,7 +15,7 @@
   "devDependencies": {
     "@tsconfig/node16": "^1.0.3",
     "constructs": "10.1.156",
-    "sst": "2.8.27",
+    "sst": "2.8.29",
     "typescript": "^5.0.4"
   }
 }

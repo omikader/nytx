@@ -8,7 +8,7 @@ from trueskill import MU, Rating, SIGMA, rate
 
 
 URL = "https://www.nytimes.com/puzzles/leaderboards"
-TABLE = os.environ["SST_Table_tableName_Table"]
+TABLE_NAME = os.environ["SST_Table_tableName_Entity"]
 
 
 def handler(event, context):
@@ -26,6 +26,7 @@ def handler(event, context):
     # Parse Date
     puzzle_date = soup.find("h3", "lbd-type__date").string
     date = datetime.strptime(puzzle_date, "%A, %B %d, %Y")
+    date_str = date.strftime("%Y-%m-%d")
 
     rows = []
     dynamodb = boto3.client("dynamodb")
@@ -38,10 +39,10 @@ def handler(event, context):
             or score.find("a", class_="lbd-score__link") is not None
         ):
             dynamodb.update_item(
-                TableName=TABLE,
-                Key={"pk": {"S": f"PLAYER#{name}"}, "sk": {"S": "#"}},
-                UpdateExpression="SET currentStreak = :val",
-                ExpressionAttributeValues={":val": {"N": "0"}},
+                TableName=TABLE_NAME,
+                Key={"PK": {"S": f"PLAYER#{name}"}, "SK": {"S": "#"}},
+                UpdateExpression="SET Streak = :zero",
+                ExpressionAttributeValues={":zero": {"N": "0"}},
             )
             continue
 
@@ -54,85 +55,93 @@ def handler(event, context):
         try:
             rank = int(score.find("p", class_="lbd-score__rank").string)
         except TypeError:  # Tie, rank is same as previous player
-            rank = rows[-1]["rank"]
+            rank = rows[-1]["Rank"]
 
         rows.append(
             {
-                "name": name,
-                "date": date.strftime("%Y-%m-%d"),
-                "dow": date.isoweekday(),
-                "time": time,
-                "seconds": seconds,
-                "rank": rank,
+                "Name": name,
+                "Time": time,
+                "Seconds": seconds,
+                "Rank": rank,
             }
         )
 
     # Get current players
     players = dynamodb.batch_get_item(
         RequestItems={
-            TABLE: {
+            TABLE_NAME: {
                 "Keys": [
-                    {"pk": {"S": f'PLAYER#{row["name"]}'}, "sk": {"S": "#"}}
+                    {"PK": {"S": f'PLAYER#{row["Name"]}'}, "SK": {"S": "#"}}
                     for row in rows
                 ]
             }
         }
-    )["Responses"][TABLE]
+    )["Responses"][TABLE_NAME]
 
     # Update player data for those who played today
+    updated_players = []
     for row in rows:
-        player = next(
-            (
-                player
-                for player in players
-                if player["pk"]["S"] == f'PLAYER#{row["name"]}'
-            ),
-            {"currentStreak": {"N": 0}, "maxStreak": {"N": 0}},
-        )
+        try:
+            player = next(
+                (
+                    player
+                    for player in players
+                    if player["PK"]["S"] == f'PLAYER#{row["Name"]}'
+                )
+            )
+            streak = int(player["Streak"]["N"]) + 1
+            max_streak = max(int(player["MaxStreak"]["N"]), streak)
+        except (StopIteration, KeyError):
+            streak = 1
+            max_streak = 1
+        finally:
+            updated_players.append(
+                dynamodb.update_item(
+                    TableName=TABLE_NAME,
+                    ReturnValues="ALL_NEW",
+                    Key={"PK": {"S": f'PLAYER#{row["Name"]}'}, "SK": {"S": "#"}},
+                    UpdateExpression="ADD #total :one SET LastPlay = :date, Streak = :s, MaxStreak = :ms",
+                    ExpressionAttributeNames={"#total": "Total"},
+                    ExpressionAttributeValues={
+                        ":one": {"N": "1"},
+                        ":date": {"S": date_str},
+                        ":s": {"N": str(streak)},
+                        ":ms": {"N": str(max_streak)},
+                    },
+                )["Attributes"]
+            )
 
-        current_streak = int(player["currentStreak"]["N"]) + 1
-        max_streak = max(int(player["maxStreak"]["N"]), current_streak)
-
-        dynamodb.update_item(
-            TableName=TABLE,
-            Key={"pk": {"S": f'PLAYER#{row["name"]}'}, "sk": {"S": "#"}},
-            UpdateExpression="ADD gamesPlayed :val SET lastPlay = :d, currentStreak = :cs, maxStreak = :ms",
-            ExpressionAttributeValues={
-                ":val": {"N": "1"},
-                ":d": {"S": row["date"]},
-                ":cs": {"N": str(current_streak)},
-                ":ms": {"N": str(max_streak)},
-            },
-        )
-
-    # Get current TrueSkill ratings
+    # Get current TrueSkill ratings -- refresh each month
     ratings = (
-        players
+        updated_players
+        and date.day != 1
         and dynamodb.batch_get_item(
             RequestItems={
-                TABLE: {
+                TABLE_NAME: {
                     "Keys": [
                         {
-                            "pk": {"S": f'SCORE#{player["pk"]["S"].split("#")[1]}'},
-                            "sk": {"S": f'DATE#{player["lastPlay"]["S"]}'},
+                            "PK": {"S": f'SCORE#{player["PK"]["S"].split("#")[1]}'},
+                            "SK": {"S": f'DATE#{player["LastPlay"]["S"]}'},
                         }
-                        for player in players
+                        for player in updated_players
                     ]
                 }
             }
-        )["Responses"][TABLE]
+        )["Responses"][TABLE_NAME]
     )
 
     # Calculate new TrueSkill ratings
     new_ratings = rate(
-        [
+        [(Rating(),)] * len(rows)
+        if not ratings
+        else [
             (
                 Rating(
                     *next(
                         (
-                            (float(rating["mu"]["N"]), float(rating["sigma"]["N"]))
+                            (float(rating["Mu"]["N"]), float(rating["Sigma"]["N"]))
                             for rating in ratings
-                            if rating["pk"]["S"] == f'SCORE#{row["name"]}'
+                            if rating["PK"]["S"] == f'SCORE#{row["Name"]}'
                         ),
                         (MU, SIGMA),
                     )
@@ -140,25 +149,34 @@ def handler(event, context):
             )
             for row in rows
         ],
-        ranks=[row["rank"] for row in rows],
+        ranks=[row["Rank"] for row in rows],
     )
 
-    # Save new data
+    # Save new data -- create sparse index for excluding midis
     dynamodb.batch_write_item(
         RequestItems={
-            TABLE: [
+            TABLE_NAME: [
                 {
                     "PutRequest": {
                         "Item": {
-                            "pk": {"S": f'SCORE#{row["name"]}'},
-                            "sk": {"S": f'DATE#{row["date"]}'},
-                            "dow": {"N": str(row["dow"])},
-                            "time": {"S": row["time"]},
-                            "seconds": {"N": str(row["seconds"])},
-                            "rank": {"N": str(row["rank"])},
-                            "mu": {"N": str(rating.mu)},
-                            "sigma": {"N": str(rating.sigma)},
-                            "eta": {"N": str(rating.exposure)},
+                            "PK": {"S": f'SCORE#{row["Name"]}'},
+                            "SK": {"S": f"DATE#{date_str}"},
+                            "GSI1PK": {"S": f"YEAR#{date.year}"},
+                            "GSI1SK": {"S": f"DATE#{date_str}"},
+                            "Time": {"S": row["Time"]},
+                            "Seconds": {"N": str(row["Seconds"])},
+                            "Rank": {"N": str(row["Rank"])},
+                            "Mu": {"N": str(rating.mu)},
+                            "Sigma": {"N": str(rating.sigma)},
+                            "Eta": {"N": str(rating.exposure)},
+                            **(
+                                {
+                                    "GSI2PK": {"S": f'SCORE#{row["Name"]}'},
+                                    "GSI2SK": {"S": f"DATE#{date_str}"},
+                                }
+                                if date.isoweekday() != 6
+                                else {}
+                            ),
                         }
                     }
                 }

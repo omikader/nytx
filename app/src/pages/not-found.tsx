@@ -1,4 +1,4 @@
-export default function NotFoundPage() {
+export const NotFoundPage = () => {
   return (
     <div className="uk-flex uk-flex-middle uk-position-center">
       <div>
@@ -9,9 +9,9 @@ export default function NotFoundPage() {
       </div>
       <div>
         <h1 className="uk-heading uk-margin-remove uk-padding-remove">
-          Page not found
+          Oops! Page not found
         </h1>
       </div>
     </div>
   );
-}
+};

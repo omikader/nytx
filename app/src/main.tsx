@@ -1,25 +1,46 @@
-import React from "react";
-import ReactDOM from "react-dom";
+import * as React from "react";
+import * as ReactDOM from "react-dom/client";
 import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
 
-import App from "./App";
-import reportWebVitals from "./reportWebVitals";
+import { HeadToHeadPage } from "./pages/head-to-head";
+import { HomePage } from "./pages/home";
+import { NotFoundPage } from "./pages/not-found";
+import { PuzzleProvider } from "./contexts/puzzle";
+import { Root } from "./pages/root";
 
 const client = new ApolloClient({
   uri: import.meta.env.VITE_API_URL,
   cache: new InMemoryCache(),
 });
 
-ReactDOM.render(
-  <React.StrictMode>
-    <ApolloProvider client={client}>
-      <App />
-    </ApolloProvider>
-  </React.StrictMode>,
-  document.getElementById("root")
-);
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Root />,
+    errorElement: <NotFoundPage />,
+    children: [
+      { index: true, element: <HomePage /> },
+      {
+        path: "ratings",
+        lazy: () => import("./pages/ratings"),
+      },
+      {
+        path: "h2h",
+        element: <HeadToHeadPage />,
+      },
+    ],
+  },
+]);
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
+  <React.StrictMode>
+    <React.StrictMode>
+      <ApolloProvider client={client}>
+        <PuzzleProvider>
+          <RouterProvider router={router} />
+        </PuzzleProvider>
+      </ApolloProvider>
+    </React.StrictMode>
+  </React.StrictMode>
+);

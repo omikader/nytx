@@ -1,11 +1,11 @@
-import { Config, Cron, Function, StackContext, use } from "sst/constructs";
+import { Cron, Function, StackContext, use } from "sst/constructs";
 
+import { ApiKeyStack } from "./ApiKeyStack";
 import { DynamoStack } from "./DynamoStack";
 
 export const CronStack = ({ stack }: StackContext) => {
+  const { NYT_S } = use(ApiKeyStack);
   const { table } = use(DynamoStack);
-
-  const NYT_S = new Config.Secret(stack, "NYT-S");
 
   const lambda = new Function(stack, "Lambda", {
     handler: "packages/functions/cron/index.handler",

@@ -1,6 +1,8 @@
+import "../theme/root.css";
+
 import { Link, Outlet } from "react-router-dom";
 
-export default function Navbar() {
+export const Root = () => {
   return (
     <div>
       <div uk-sticky="sel-target: .uk-navbar-container; cls-active: uk-navbar-sticky">
@@ -11,10 +13,7 @@ export default function Navbar() {
             </Link>
             <ul className="uk-navbar-nav">
               <li>
-                <Link to="/standings">Standings</Link>
-              </li>
-              <li>
-                <Link to="/chart">Chart</Link>
+                <Link to="/ratings">Ratings</Link>
               </li>
               <li>
                 <Link to="/h2h">H2H</Link>
@@ -37,4 +36,4 @@ export default function Navbar() {
       </div>
     </div>
   );
-}
+};

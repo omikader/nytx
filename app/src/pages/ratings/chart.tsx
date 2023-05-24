@@ -1,5 +1,3 @@
-import React from "react";
-import moment from "moment";
 import {
   CartesianGrid,
   Legend,
@@ -10,9 +8,9 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import { useState } from "react";
 
-import useWindowDimensions from "../hooks/useWindowDimensions";
-import { GetLeaderboards } from "../api/get-leaderboards";
+import useWindowDimensions from "../../hooks/useWindowDimensions";
 
 const COLORS = [
   "#e6194b",
@@ -32,29 +30,19 @@ const COLORS = [
   "#000075",
 ];
 
-const DAYS = ["Su", "M", "Tu", "W", "Th", "F", "Sa"];
+export interface IProps {
+  data: { date: string }[];
+  labels: string[];
+}
 
-export default function RatingLineChart({ data }: { data: GetLeaderboards }) {
+export const RatingLineChart = ({ data, labels }: IProps) => {
   const { width } = useWindowDimensions();
-  const chartData = data.leaderboards.map(({ date, ratings }) => {
-    return {
-      date,
-      ...ratings.reduce((acc: { [name: string]: number }, { user, eta }) => {
-        acc[user.name] = eta;
-        return acc;
-      }, {}),
-    };
-  });
-  const labels = Object.keys(Object.assign({}, ...chartData));
-  labels.shift(); // remove 'date' key
-  const [hiddenMap, setHiddenMap] = React.useState(
-    labels.reduce((acc: { [key: string]: boolean }, name: string) => {
-      acc[name] = false;
-      return acc;
-    }, {})
+
+  const [hiddenMap, setHiddenMap] = useState<Record<string, boolean>>(
+    labels.reduce((acc, curr) => ({ ...acc, [curr]: false }), {})
   );
 
-  const handleOnClick = (event: any) => {
+  const handleClick = (event: any) => {
     setHiddenMap({
       ...hiddenMap,
       [event.value]: !hiddenMap[event.value],
@@ -63,24 +51,28 @@ export default function RatingLineChart({ data }: { data: GetLeaderboards }) {
 
   return (
     <ResponsiveContainer>
-      <LineChart data={chartData}>
+      <LineChart data={data}>
         <CartesianGrid strokeDasharray="3 3" />
-        <XAxis
-          dataKey="date"
-          tickFormatter={(value: string) => DAYS[moment(value).day()]}
-        />
+
+        <XAxis dataKey="date" />
+
         <YAxis
           label={{
-            value: "TrueSkill Rating",
+            value: "TrueSkill Estimate",
             angle: -90,
             position: "insideLeft",
           }}
         />
+
         <Tooltip
           itemSorter={(item: any) => -item.value}
-          formatter={(value: number) => Number(value.toFixed(2))}
+          formatter={(value: number) =>
+            Math.round((value + Number.EPSILON) * 100) / 100
+          }
         />
-        <Legend onClick={handleOnClick} />
+
+        <Legend onClick={handleClick} />
+
         {labels.map((name: string, index: number) => (
           <Line
             connectNulls
@@ -97,4 +89,4 @@ export default function RatingLineChart({ data }: { data: GetLeaderboards }) {
       </LineChart>
     </ResponsiveContainer>
   );
-}
+};

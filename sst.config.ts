@@ -1,5 +1,6 @@
 import type { SSTConfig } from "sst";
 
+import { ApiKeyStack } from "./stacks/ApiKeyStack";
 import { ApolloStack } from "./stacks/ApolloStack";
 import { ClientStack } from "./stacks/ClientStack";
 import { CronStack } from "./stacks/CronStack";
@@ -19,6 +20,7 @@ export default {
     });
 
     app
+      .stack(ApiKeyStack)
       .stack(DynamoStack)
       .stack(CronStack)
       .stack(ApolloStack)
