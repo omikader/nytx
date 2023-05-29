@@ -1,6 +1,6 @@
 import { CountdownClock } from "./countdown";
 import { Leaderboard } from "./table";
-import { usePuzzle } from "../../hooks/usePuzzle";
+import { usePuzzle } from "../../hooks";
 
 export const HomePage = () => {
   const { activeLeaderboard, nextPuzzleDateTime } = usePuzzle();

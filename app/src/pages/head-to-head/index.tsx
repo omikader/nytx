@@ -4,7 +4,7 @@ import { useState } from "react";
 import { ExcludeMidisCheckbox } from "./checkbox";
 import { HeadToHeadSelector } from "./selector";
 import { HeadToHeadTable } from "./table";
-import { usePuzzle } from "../../hooks/usePuzzle";
+import { usePuzzle } from "../../hooks";
 
 export const HeadToHeadPage = () => {
   const { activeLeaderboard } = usePuzzle();

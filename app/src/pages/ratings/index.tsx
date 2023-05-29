@@ -2,7 +2,7 @@ import { chain, uniq } from "lodash";
 import { useQuery } from "@apollo/client";
 
 import { RatingLineChart } from "./chart";
-import { Spinner } from "../../components/Spinner";
+import { Spinner } from "../../components";
 import { graphql } from "../../gql";
 
 const RATINGS_QUERY_DOCUMENT = graphql(`

@@ -1,4 +1,4 @@
-import { PuzzleContextType } from "../../contexts/puzzle";
+import { PuzzleContextType } from "../../contexts";
 
 interface IProps {
   data: PuzzleContextType["activeLeaderboard"];

@@ -3,11 +3,8 @@ import * as ReactDOM from "react-dom/client";
 import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 
-import { HeadToHeadPage } from "./pages/head-to-head";
-import { HomePage } from "./pages/home";
-import { NotFoundPage } from "./pages/not-found";
-import { PuzzleProvider } from "./contexts/puzzle";
-import { Root } from "./pages/root";
+import { HeadToHeadPage, HomePage, NotFoundPage, Root } from "./pages";
+import { PuzzleProvider } from "./contexts";
 
 const client = new ApolloClient({
   uri: import.meta.env.VITE_API_URL,

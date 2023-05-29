@@ -10,7 +10,7 @@ import {
 } from "recharts";
 import { useState } from "react";
 
-import { useWindowDimensions } from "../../hooks/useWindowDimensions";
+import { useWindowDimensions } from "../../hooks";
 
 const COLORS = [
   "#e6194b",

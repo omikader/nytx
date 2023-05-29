@@ -1,8 +1,8 @@
 import * as React from "react";
 import { useQuery } from "@apollo/client";
 
+import { Error, Spinner } from "../components";
 import { PuzzleContextQuery } from "../gql/graphql";
-import { Spinner } from "../components/Spinner";
 import { graphql } from "../gql";
 
 const PUZZLE_CONTEXT_QUERY_DOCUMENT = graphql(`
@@ -34,11 +34,7 @@ export const PuzzleProvider = ({ children }: IProps) => {
   const { loading, error, data } = useQuery(PUZZLE_CONTEXT_QUERY_DOCUMENT);
 
   if (error) {
-    return (
-      <div className="uk-alert-danger uk-padding-small" uk-alert="true">
-        <p className="uk-margin-remove-bottom">Error! {error.message}</p>
-      </div>
-    );
+    return <Error error={error} />;
   }
 
   if (loading || !data) {

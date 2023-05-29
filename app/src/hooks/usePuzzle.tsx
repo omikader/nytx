@@ -1,7 +1,7 @@
 import { isNull } from "lodash";
 import { useContext } from "react";
 
-import { PuzzleContext } from "../contexts/puzzle";
+import { PuzzleContext } from "../contexts";
 
 export const usePuzzle = () => {
   const context = useContext(PuzzleContext);

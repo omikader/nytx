@@ -1,6 +1,6 @@
 import { useQuery } from "@apollo/client";
 
-import { Spinner } from "../../components/Spinner";
+import { Spinner } from "../../components";
 import { graphql } from "../../gql";
 
 const HEAD_TO_HEAD_QUERY_DOCUMENT = graphql(`
