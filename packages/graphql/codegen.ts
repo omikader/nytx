@@ -2,7 +2,8 @@ import { CodegenConfig } from "@graphql-codegen/cli";
 
 const config: CodegenConfig = {
   schema: "../functions/api/src/schema.ts",
-  documents: "../../app/src/**/*.gql",
+  documents: "../../app/src/**/*.tsx",
+  ignoreNoDocuments: true,
   generates: {
     "../functions/api/src/resolvers/types.ts": {
       plugins: ["typescript", "typescript-resolvers"],
@@ -13,15 +14,9 @@ const config: CodegenConfig = {
         },
       },
     },
-    "../../app/src/hooks/index.tsx": {
-      plugins: [
-        "typescript",
-        "typescript-operations",
-        "typescript-react-apollo",
-      ],
+    "../../app/src/gql/": {
+      preset: "client",
       config: {
-        apolloReactCommonImportFrom: "@apollo/client",
-        apolloReactHooksImportFrom: "@apollo/client",
         scalars: {
           DateTime: "string",
         },

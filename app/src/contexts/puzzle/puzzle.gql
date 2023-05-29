@@ -1,9 +1,0 @@
-query Puzzle {
-  activeLeaderboard {
-    name
-    date
-    time
-    rank
-  }
-  nextPuzzleDateTime
-}

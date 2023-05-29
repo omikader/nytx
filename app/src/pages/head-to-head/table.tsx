@@ -1,5 +1,23 @@
+import { useQuery } from "@apollo/client";
+
 import { Spinner } from "../../components/Spinner";
-import { useHeadToHeadQuery } from "../../hooks";
+import { graphql } from "../../gql";
+
+const HEAD_TO_HEAD_QUERY_DOCUMENT = graphql(`
+  query HeadToHead($name1: String!, $name2: String!, $excludeMidis: Boolean!) {
+    headToHead(name1: $name1, name2: $name2, excludeMidis: $excludeMidis) {
+      wins
+      losses
+      ties
+      stats1 {
+        avg
+      }
+      stats2 {
+        avg
+      }
+    }
+  }
+`);
 
 interface IProps {
   name1: string;
@@ -8,7 +26,7 @@ interface IProps {
 }
 
 export const HeadToHeadTable = ({ name1, name2, excludeMidis }: IProps) => {
-  const { loading, error, data } = useHeadToHeadQuery({
+  const { loading, error, data } = useQuery(HEAD_TO_HEAD_QUERY_DOCUMENT, {
     variables: { name1, name2, excludeMidis },
   });
 

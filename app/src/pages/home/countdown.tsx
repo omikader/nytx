@@ -1,5 +1,7 @@
+import { PuzzleContextType } from "../../contexts/puzzle";
+
 interface IProps {
-  date: string;
+  date: PuzzleContextType["nextPuzzleDateTime"];
 }
 
 export const CountdownClock = ({ date }: IProps) => {

@@ -1,9 +1,0 @@
-query Ratings {
-  ratings {
-    name
-    date
-    mu
-    sigma
-    eta
-  }
-}

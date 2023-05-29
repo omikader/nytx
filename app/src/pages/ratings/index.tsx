@@ -1,11 +1,24 @@
 import { chain, uniq } from "lodash";
+import { useQuery } from "@apollo/client";
 
 import { RatingLineChart } from "./chart";
 import { Spinner } from "../../components/Spinner";
-import { useRatingsQuery } from "../../hooks";
+import { graphql } from "../../gql";
+
+const RATINGS_QUERY_DOCUMENT = graphql(`
+  query Ratings {
+    ratings {
+      name
+      date
+      mu
+      sigma
+      eta
+    }
+  }
+`);
 
 export const Component = () => {
-  const { loading, error, data } = useRatingsQuery();
+  const { loading, error, data } = useQuery(RATINGS_QUERY_DOCUMENT);
 
   if (error) {
     return (
