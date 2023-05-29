@@ -44,13 +44,6 @@ export const RatingLineChart = ({ data, labels }: IProps) => {
     labels.reduce((acc, curr) => ({ ...acc, [curr]: false }), {})
   );
 
-  const handleClick = (event: any) => {
-    setHiddenMap({
-      ...hiddenMap,
-      [event.value]: !hiddenMap[event.value],
-    });
-  };
-
   return (
     <ResponsiveContainer>
       <LineChart data={data}>
@@ -76,7 +69,14 @@ export const RatingLineChart = ({ data, labels }: IProps) => {
           }
         />
 
-        <Legend onClick={handleClick} />
+        <Legend
+          onClick={(data) => {
+            setHiddenMap({
+              ...hiddenMap,
+              [data.value]: !hiddenMap[data.value],
+            });
+          }}
+        />
 
         {labels.map((label: string, index: number) => (
           <Line
