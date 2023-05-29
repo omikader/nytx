@@ -10,7 +10,7 @@ import {
 } from "recharts";
 import { useState } from "react";
 
-import useWindowDimensions from "../../hooks/useWindowDimensions";
+import { useWindowDimensions } from "../../hooks/useWindowDimensions";
 
 const COLORS = [
   "#e6194b",
@@ -29,6 +29,8 @@ const COLORS = [
   "#808080",
   "#000075",
 ];
+
+const DAYS = ["Su", "M", "Tu", "W", "Th", "F", "Sa"];
 
 export interface IProps {
   data: { date: string }[];
@@ -54,7 +56,10 @@ export const RatingLineChart = ({ data, labels }: IProps) => {
       <LineChart data={data}>
         <CartesianGrid strokeDasharray="3 3" />
 
-        <XAxis dataKey="date" />
+        <XAxis
+          dataKey="date"
+          tickFormatter={(value: string) => DAYS[new Date(value).getUTCDay()]}
+        />
 
         <YAxis
           label={{
@@ -65,7 +70,7 @@ export const RatingLineChart = ({ data, labels }: IProps) => {
         />
 
         <Tooltip
-          itemSorter={(item: any) => -item.value}
+          itemSorter={(item) => -1 * (item.value ?? 0)}
           formatter={(value: number) =>
             Math.round((value + Number.EPSILON) * 100) / 100
           }
@@ -73,17 +78,17 @@ export const RatingLineChart = ({ data, labels }: IProps) => {
 
         <Legend onClick={handleClick} />
 
-        {labels.map((name: string, index: number) => (
+        {labels.map((label: string, index: number) => (
           <Line
             connectNulls
             type="linear"
             dot={width > 640}
-            key={name}
-            name={name}
-            dataKey={(dtm) => (name in dtm ? Math.max(dtm[name], 0) : null)}
+            key={label}
+            name={label}
+            dataKey={(dtm) => (label in dtm ? Math.max(dtm[label], 0) : null)}
             stroke={COLORS[index % COLORS.length]}
             strokeWidth={2.5}
-            hide={hiddenMap[name]}
+            hide={hiddenMap[label]}
           />
         ))}
       </LineChart>
