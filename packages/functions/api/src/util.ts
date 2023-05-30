@@ -1,4 +1,4 @@
-export const START = "2023-05-21";
+export const START = "2023-06-01";
 export const ZONE = "America/New_York";
 
 export const parseKey = (key: string): string => {
