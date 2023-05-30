@@ -6,7 +6,7 @@ interface IProps {
 
 export const Leaderboard = ({ data }: IProps) => {
   return (
-    <table className="uk-table uk-table-small uk-table-striped uk-table-hover">
+    <table className="uk-table uk-table-small uk-table-striped uk-table-hover uk-text-center">
       <thead>
         <tr>
           <th className="uk-width-small uk-text-center">Rank</th>

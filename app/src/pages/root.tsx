@@ -1,5 +1,3 @@
-import "../theme/root.css";
-
 import { Link, Outlet } from "react-router-dom";
 
 export const Root = () => {
