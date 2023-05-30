@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useQuery } from "@apollo/client";
 
-import { Error, Spinner } from "../components";
+import { Error, Loader } from "../components";
 import { PuzzleContextQuery } from "../gql/graphql";
 import { graphql } from "../gql";
 
@@ -38,7 +38,7 @@ export const PuzzleProvider = ({ children }: IProps) => {
   }
 
   if (loading || !data) {
-    return <Spinner />;
+    return <Loader />;
   }
 
   return (

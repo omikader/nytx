@@ -1,6 +1,6 @@
 import { useQuery } from "@apollo/client";
 
-import { Spinner } from "../../components";
+import { Error, Loader } from "../../components";
 import { graphql } from "../../gql";
 
 const HEAD_TO_HEAD_QUERY_DOCUMENT = graphql(`
@@ -31,15 +31,11 @@ export const HeadToHeadTable = ({ name1, name2, excludeMidis }: IProps) => {
   });
 
   if (error) {
-    return (
-      <div className="uk-alert-danger uk-padding-small" uk-alert="true">
-        <p className="uk-margin-remove-bottom">Error! {error.message}</p>
-      </div>
-    );
+    return <Error error={error} />;
   }
 
   if (loading || !data) {
-    return <Spinner />;
+    return <Loader />;
   }
 
   return (

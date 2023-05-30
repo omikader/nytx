@@ -1,2 +1,2 @@
 export { Error } from "./error";
-export { Spinner } from "./spinner";
+export { Loader } from "./loader";

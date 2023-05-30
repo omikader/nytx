@@ -18,14 +18,8 @@ const router = createBrowserRouter([
     errorElement: <NotFoundPage />,
     children: [
       { index: true, element: <HomePage /> },
-      {
-        path: "ratings",
-        lazy: () => import("./pages/ratings"),
-      },
-      {
-        path: "h2h",
-        element: <HeadToHeadPage />,
-      },
+      { path: "ratings", lazy: () => import("./pages/ratings") },
+      { path: "h2h", element: <HeadToHeadPage /> },
     ],
   },
 ]);
