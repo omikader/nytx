@@ -109,7 +109,7 @@ def handler(event, context):
 
     # Get current TrueSkill ratings -- refresh each month
     ratings = (
-        updated_players
+        players
         and date.day != 1
         and dynamodb.batch_get_item(
             RequestItems={
@@ -117,9 +117,10 @@ def handler(event, context):
                     "Keys": [
                         {
                             "PK": {"S": f'SCORE#{player["PK"]["S"].split("#")[1]}'},
-                            "SK": {"S": f'DATE#{player.get("LastPlay", {}).get("S")}'},
+                            "SK": {"S": f'DATE#{player["LastPlay"]["S"]}'},
                         }
-                        for player in updated_players
+                        for player in players
+                        if "LastPlay" in player
                     ]
                 }
             }
