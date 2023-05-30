@@ -79,7 +79,6 @@ def handler(event, context):
     )["Responses"][TABLE_NAME]
 
     # Update player data for those who played today
-    updated_players = []
     for row in rows:
         try:
             player = next(
@@ -95,20 +94,17 @@ def handler(event, context):
             streak = 1
             max_streak = 1
         finally:
-            updated_players.append(
-                dynamodb.update_item(
-                    TableName=TABLE_NAME,
-                    ReturnValues="ALL_NEW",
-                    Key={"PK": {"S": f'PLAYER#{row["Name"]}'}, "SK": {"S": "#"}},
-                    UpdateExpression="ADD #total :one SET LastPlay = :date, Streak = :s, MaxStreak = :ms",
-                    ExpressionAttributeNames={"#total": "Total"},
-                    ExpressionAttributeValues={
-                        ":one": {"N": "1"},
-                        ":date": {"S": date_str},
-                        ":s": {"N": str(streak)},
-                        ":ms": {"N": str(max_streak)},
-                    },
-                )["Attributes"]
+            dynamodb.update_item(
+                TableName=TABLE_NAME,
+                Key={"PK": {"S": f'PLAYER#{row["Name"]}'}, "SK": {"S": "#"}},
+                UpdateExpression="ADD #total :one SET LastPlay = :date, Streak = :s, MaxStreak = :ms",
+                ExpressionAttributeNames={"#total": "Total"},
+                ExpressionAttributeValues={
+                    ":one": {"N": "1"},
+                    ":date": {"S": date_str},
+                    ":s": {"N": str(streak)},
+                    ":ms": {"N": str(max_streak)},
+                },
             )
 
     # Get current TrueSkill ratings -- refresh each month
@@ -121,7 +117,7 @@ def handler(event, context):
                     "Keys": [
                         {
                             "PK": {"S": f'SCORE#{player["PK"]["S"].split("#")[1]}'},
-                            "SK": {"S": f'DATE#{player["LastPlay"]["S"]}'},
+                            "SK": {"S": f'DATE#{player.get("LastPlay", {}).get("S")}'},
                         }
                         for player in updated_players
                     ]
