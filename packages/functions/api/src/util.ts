@@ -1,4 +1,6 @@
-export const START = "2023-06-01";
+import { P, match } from "ts-pattern";
+
+export const START = "2023-05-30";
 export const ZONE = "America/New_York";
 
 export const parseKey = (key: string): string => {
@@ -6,15 +8,12 @@ export const parseKey = (key: string): string => {
 };
 
 export const toHHMMSS = (seconds: number): string => {
-  if (seconds === 0) {
-    return "--";
-  }
-
-  const h = Math.floor(seconds / 3600);
-  const m = Math.floor((seconds % 3600) / 60);
-  const s = Math.round(seconds % 60);
-
-  return [h, m > 9 ? m : h ? "0" + m : m || "0", s > 9 ? s : "0" + s]
-    .filter(Boolean)
-    .join(":");
+  return match({ seconds })
+    .with({ seconds: 0 }, () => "--")
+    .with({ seconds: P.when((val) => val < 3600) }, () =>
+      new Date(seconds * 1000).toISOString().substring(14, 19)
+    )
+    .otherwise(({ seconds }) =>
+      new Date(seconds * 1000).toISOString().substring(11, 16)
+    );
 };

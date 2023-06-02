@@ -8,7 +8,7 @@ export const HomePage = () => {
   const date = activeLeaderboard[0].date;
 
   return (
-    <div className="uk-flex uk-flex-column uk-flex-middle uk-text-center">
+    <div className="uk-flex uk-flex-column uk-flex-middle">
       <h1 className="uk-heading-small uk-heading-divider">{date}</h1>
 
       <CountdownClock date={nextPuzzleDateTime} />

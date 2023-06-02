@@ -28,7 +28,7 @@ export const Root = () => {
         </nav>
       </div>
       <div className="uk-section uk-section-small uk-section-default">
-        <div className="uk-container">
+        <div className="uk-container uk-text-center">
           <Outlet />
         </div>
       </div>

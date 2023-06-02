@@ -18,7 +18,7 @@ export const HeadToHeadPage = () => {
     .value();
 
   return (
-    <div className="uk-text-center">
+    <div>
       <form>
         <HeadToHeadSelector
           options={reject(options, (name) => name === name2)}

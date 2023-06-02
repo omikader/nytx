@@ -107,9 +107,10 @@ def handler(event, context):
                 },
             )
 
-    # Get current TrueSkill ratings -- refresh each month
+    # Get current TrueSkill ratings
     ratings = (
         players
+        # Skip fetch on the first day of the month to refresh ratings monthly
         and date.day != 1
         and dynamodb.batch_get_item(
             RequestItems={
@@ -120,7 +121,8 @@ def handler(event, context):
                             "SK": {"S": f'DATE#{player["LastPlay"]["S"]}'},
                         }
                         for player in players
-                        if "LastPlay" in player
+                        # Only use LastPlay rating if it's from this month
+                        if player.get("LastPlay", "")[5:7] == date_str[5:7]
                     ]
                 }
             }
