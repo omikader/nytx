@@ -10,8 +10,6 @@ const RATINGS_QUERY_DOCUMENT = graphql(`
     ratings {
       name
       date
-      mu
-      sigma
       eta
     }
   }

@@ -21,21 +21,11 @@ export type Player = {
   __typename?: 'Player';
   bestScore?: Maybe<Score>;
   gamesPlayed: Scalars['Int']['output'];
-  lastPlay: Scalars['String']['output'];
+  lastPlay?: Maybe<Scalars['String']['output']>;
   maxStreak: Scalars['Int']['output'];
   name: Scalars['String']['output'];
   streak: Scalars['Int']['output'];
   worstScore?: Maybe<Score>;
-};
-
-
-export type PlayerBestScoreArgs = {
-  excludeMidis: Scalars['Boolean']['input'];
-};
-
-
-export type PlayerWorstScoreArgs = {
-  excludeMidis: Scalars['Boolean']['input'];
 };
 
 export type Query = {
@@ -111,12 +101,21 @@ export type HeadToHeadQueryVariables = Exact<{
 
 export type HeadToHeadQuery = { __typename?: 'Query', headToHead: { __typename?: 'Series', wins: number, losses: number, ties: number, stats1: { __typename?: 'Stats', avg: string }, stats2: { __typename?: 'Stats', avg: string } } };
 
+export type PlayerModalQueryVariables = Exact<{
+  name: Scalars['String']['input'];
+  excludeMidis: Scalars['Boolean']['input'];
+}>;
+
+
+export type PlayerModalQuery = { __typename?: 'Query', player: { __typename?: 'Player', gamesPlayed: number, streak: number, maxStreak: number, lastPlay?: string | null, bestScore?: { __typename?: 'Score', rank: string, date: string, time: string } | null, worstScore?: { __typename?: 'Score', rank: string, date: string, time: string } | null } };
+
 export type RatingsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type RatingsQuery = { __typename?: 'Query', ratings: Array<{ __typename?: 'Rating', name: string, date: string, mu: number, sigma: number, eta: number }> };
+export type RatingsQuery = { __typename?: 'Query', ratings: Array<{ __typename?: 'Rating', name: string, date: string, eta: number }> };
 
 
 export const PuzzleContextDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"PuzzleContext"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nextPuzzleDateTime"}},{"kind":"Field","name":{"kind":"Name","value":"activeLeaderboard"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"date"}},{"kind":"Field","name":{"kind":"Name","value":"time"}},{"kind":"Field","name":{"kind":"Name","value":"rank"}}]}}]}}]} as unknown as DocumentNode<PuzzleContextQuery, PuzzleContextQueryVariables>;
 export const HeadToHeadDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"HeadToHead"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"name1"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"name2"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"excludeMidis"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Boolean"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"headToHead"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"name1"},"value":{"kind":"Variable","name":{"kind":"Name","value":"name1"}}},{"kind":"Argument","name":{"kind":"Name","value":"name2"},"value":{"kind":"Variable","name":{"kind":"Name","value":"name2"}}},{"kind":"Argument","name":{"kind":"Name","value":"excludeMidis"},"value":{"kind":"Variable","name":{"kind":"Name","value":"excludeMidis"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"wins"}},{"kind":"Field","name":{"kind":"Name","value":"losses"}},{"kind":"Field","name":{"kind":"Name","value":"ties"}},{"kind":"Field","name":{"kind":"Name","value":"stats1"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"avg"}}]}},{"kind":"Field","name":{"kind":"Name","value":"stats2"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"avg"}}]}}]}}]}}]} as unknown as DocumentNode<HeadToHeadQuery, HeadToHeadQueryVariables>;
-export const RatingsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Ratings"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ratings"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"date"}},{"kind":"Field","name":{"kind":"Name","value":"mu"}},{"kind":"Field","name":{"kind":"Name","value":"sigma"}},{"kind":"Field","name":{"kind":"Name","value":"eta"}}]}}]}}]} as unknown as DocumentNode<RatingsQuery, RatingsQueryVariables>;
+export const PlayerModalDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"PlayerModal"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"name"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"excludeMidis"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Boolean"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"player"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"name"},"value":{"kind":"Variable","name":{"kind":"Name","value":"name"}}},{"kind":"Argument","name":{"kind":"Name","value":"excludeMidis"},"value":{"kind":"Variable","name":{"kind":"Name","value":"excludeMidis"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"gamesPlayed"}},{"kind":"Field","name":{"kind":"Name","value":"streak"}},{"kind":"Field","name":{"kind":"Name","value":"maxStreak"}},{"kind":"Field","name":{"kind":"Name","value":"lastPlay"}},{"kind":"Field","name":{"kind":"Name","value":"bestScore"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"rank"}},{"kind":"Field","name":{"kind":"Name","value":"date"}},{"kind":"Field","name":{"kind":"Name","value":"time"}}]}},{"kind":"Field","name":{"kind":"Name","value":"worstScore"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"rank"}},{"kind":"Field","name":{"kind":"Name","value":"date"}},{"kind":"Field","name":{"kind":"Name","value":"time"}}]}}]}}]}}]} as unknown as DocumentNode<PlayerModalQuery, PlayerModalQueryVariables>;
+export const RatingsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Ratings"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ratings"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"date"}},{"kind":"Field","name":{"kind":"Name","value":"eta"}}]}}]}}]} as unknown as DocumentNode<RatingsQuery, RatingsQueryVariables>;

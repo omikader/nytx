@@ -14,12 +14,12 @@ export const typeDefs = gql`
 
   type Player {
     name: String!
-    lastPlay: String!
+    lastPlay: String
     gamesPlayed: Int!
     streak: Int!
     maxStreak: Int!
-    bestScore(excludeMidis: Boolean!): Score
-    worstScore(excludeMidis: Boolean!): Score
+    bestScore: Score
+    worstScore: Score
   }
 
   type Score {

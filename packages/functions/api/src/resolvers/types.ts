@@ -22,21 +22,11 @@ export type Player = {
   __typename?: 'Player';
   bestScore?: Maybe<Score>;
   gamesPlayed: Scalars['Int']['output'];
-  lastPlay: Scalars['String']['output'];
+  lastPlay?: Maybe<Scalars['String']['output']>;
   maxStreak: Scalars['Int']['output'];
   name: Scalars['String']['output'];
   streak: Scalars['Int']['output'];
   worstScore?: Maybe<Score>;
-};
-
-
-export type PlayerBestScoreArgs = {
-  excludeMidis: Scalars['Boolean']['input'];
-};
-
-
-export type PlayerWorstScoreArgs = {
-  excludeMidis: Scalars['Boolean']['input'];
 };
 
 export type Query = {
@@ -202,13 +192,13 @@ export interface DateTimeScalarConfig extends GraphQLScalarTypeConfig<ResolversT
 }
 
 export type PlayerResolvers<ContextType = IContext, ParentType extends ResolversParentTypes['Player'] = ResolversParentTypes['Player']> = {
-  bestScore?: Resolver<Maybe<ResolversTypes['Score']>, ParentType, ContextType, RequireFields<PlayerBestScoreArgs, 'excludeMidis'>>;
+  bestScore?: Resolver<Maybe<ResolversTypes['Score']>, ParentType, ContextType>;
   gamesPlayed?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  lastPlay?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  lastPlay?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   maxStreak?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   streak?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  worstScore?: Resolver<Maybe<ResolversTypes['Score']>, ParentType, ContextType, RequireFields<PlayerWorstScoreArgs, 'excludeMidis'>>;
+  worstScore?: Resolver<Maybe<ResolversTypes['Score']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
