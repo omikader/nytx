@@ -122,7 +122,7 @@ def handler(event, context):
                         }
                         for player in players
                         # Only use LastPlay rating if it's from this month
-                        if player.get("LastPlay", "")[5:7] == date_str[5:7]
+                        if player.get("LastPlay", {}).get("S", "")[5:7] == date_str[5:7]
                     ]
                 }
             }
@@ -131,9 +131,7 @@ def handler(event, context):
 
     # Calculate new TrueSkill ratings
     new_ratings = rate(
-        [(Rating(),)] * len(rows)
-        if not ratings
-        else [
+        [
             (
                 Rating(
                     *next(
@@ -151,7 +149,7 @@ def handler(event, context):
         ranks=[row["Rank"] for row in rows],
     )
 
-    # Save new data -- create sparse index for excluding midis
+    # Save new data
     dynamodb.batch_write_item(
         RequestItems={
             TABLE_NAME: [
@@ -168,6 +166,7 @@ def handler(event, context):
                             "Mu": {"N": str(rating.mu)},
                             "Sigma": {"N": str(rating.sigma)},
                             "Eta": {"N": str(rating.exposure)},
+                            # GSI2 is a sparse index for excluding midi results
                             **(
                                 {
                                     "GSI2PK": {"S": f'SCORE#{row["Name"]}'},
