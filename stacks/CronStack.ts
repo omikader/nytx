@@ -11,6 +11,7 @@ export const CronStack = ({ stack }: StackContext) => {
     handler: "packages/functions/cron/index.handler",
     runtime: "python3.8",
     bind: [table, NYT_S],
+    retryAttempts: 0,
   });
 
   new Cron(stack, "WeekdayCron", {

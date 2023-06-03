@@ -1,4 +1,5 @@
 import os
+from dataclasses import dataclass
 from datetime import datetime
 
 import boto3
@@ -9,6 +10,14 @@ from trueskill import MU, Rating, SIGMA, rate
 
 URL = "https://www.nytimes.com/puzzles/leaderboards"
 TABLE_NAME = os.environ["SST_Table_tableName_Entity"]
+
+
+@dataclass
+class Score:
+    name: str
+    rank: int
+    time: str
+    seconds: int
 
 
 def handler(event, context):
@@ -23,12 +32,13 @@ def handler(event, context):
     response = requests.get(URL, cookies={"NYT-S": secret})
     soup = BeautifulSoup(response.text, "html.parser")
 
-    # Parse Date
+    # Parse the date
     puzzle_date = soup.find("h3", "lbd-type__date").string
     date = datetime.strptime(puzzle_date, "%A, %B %d, %Y")
     date_str = date.strftime("%Y-%m-%d")
 
-    rows = []
+    # Parse the scores
+    scores = []
     dynamodb = boto3.client("dynamodb")
     for score in soup.find_all("div", class_="lbd-score"):
         name_tag = score.find("p", class_="lbd-score__name")
@@ -55,61 +65,57 @@ def handler(event, context):
         try:
             rank = int(score.find("p", class_="lbd-score__rank").string)
         except TypeError:  # Tie, rank is same as previous player
-            rank = rows[-1]["Rank"]
+            rank = scores[-1].rank
 
-        rows.append(
-            {
-                "Name": name,
-                "Time": time,
-                "Seconds": seconds,
-                "Rank": rank,
-            }
-        )
+        scores.append(Score(name, rank, time, seconds))
 
-    # Get current players
-    players = dynamodb.batch_get_item(
+    # Exit early if there are no scores to report
+    if not scores:
+        return
+
+    # Correct ranking data if there were any NYT glitches
+    for score in scores:
+        score.rank = score.rank - (scores[0].rank - 1)
+
+    # Get player data
+    player_data = dynamodb.batch_get_item(
         RequestItems={
             TABLE_NAME: {
                 "Keys": [
-                    {"PK": {"S": f'PLAYER#{row["Name"]}'}, "SK": {"S": "#"}}
-                    for row in rows
+                    {"PK": {"S": f"PLAYER#{score.name}"}, "SK": {"S": "#"}}
+                    for score in scores
                 ]
             }
         }
     )["Responses"][TABLE_NAME]
 
-    # Update player data for those who played today
-    for row in rows:
-        try:
-            player = next(
-                (
-                    player
-                    for player in players
-                    if player["PK"]["S"] == f'PLAYER#{row["Name"]}'
-                )
-            )
-            streak = int(player["Streak"]["N"]) + 1
-            max_streak = max(int(player["MaxStreak"]["N"]), streak)
-        except (StopIteration, KeyError):
-            streak = 1
-            max_streak = 1
-        finally:
-            dynamodb.update_item(
-                TableName=TABLE_NAME,
-                Key={"PK": {"S": f'PLAYER#{row["Name"]}'}, "SK": {"S": "#"}},
-                UpdateExpression="ADD #total :one SET LastPlay = :date, Streak = :s, MaxStreak = :ms",
-                ExpressionAttributeNames={"#total": "Total"},
-                ExpressionAttributeValues={
-                    ":one": {"N": "1"},
-                    ":date": {"S": date_str},
-                    ":s": {"N": str(streak)},
-                    ":ms": {"N": str(max_streak)},
-                },
-            )
+    # Update player data
+    for score in scores:
+        pk = f"PLAYER#{score.name}"
+        player = next(
+            (player for player in player_data if player["PK"]["S"] == pk),
+            {"Streak": {"N": 0}, "MaxStreak": {"N": 0}},
+        )
+
+        streak = int(player["Streak"]["N"]) + 1
+        max_streak = max(int(player["MaxStreak"]["N"]), streak)
+
+        dynamodb.update_item(
+            TableName=TABLE_NAME,
+            Key={"PK": {"S": pk}, "SK": {"S": "#"}},
+            UpdateExpression="ADD #total :one SET LastPlay = :date, Streak = :s, MaxStreak = :ms",
+            ExpressionAttributeNames={"#total": "Total"},
+            ExpressionAttributeValues={
+                ":one": {"N": "1"},
+                ":date": {"S": date_str},
+                ":s": {"N": str(streak)},
+                ":ms": {"N": str(max_streak)},
+            },
+        )
 
     # Get current TrueSkill ratings
-    ratings = (
-        players
+    rating_data = (
+        player_data
         # Skip fetch on the first day of the month to refresh ratings monthly
         and date.day != 1
         and dynamodb.batch_get_item(
@@ -120,8 +126,8 @@ def handler(event, context):
                             "PK": {"S": f'SCORE#{player["PK"]["S"].split("#")[1]}'},
                             "SK": {"S": f'DATE#{player["LastPlay"]["S"]}'},
                         }
-                        for player in players
-                        # Only use LastPlay rating if it's from this month
+                        for player in player_data
+                        # Only use 'LastPlay' rating if it's from this month
                         if player.get("LastPlay", {}).get("S", "")[5:7] == date_str[5:7]
                     ]
                 }
@@ -129,47 +135,51 @@ def handler(event, context):
         )["Responses"][TABLE_NAME]
     )
 
-    # Calculate new TrueSkill ratings
-    new_ratings = rate(
-        [
-            (
-                Rating(
-                    *next(
-                        (
-                            (float(rating["Mu"]["N"]), float(rating["Sigma"]["N"]))
-                            for rating in ratings
-                            if rating["PK"]["S"] == f'SCORE#{row["Name"]}'
-                        ),
-                        (MU, SIGMA),
-                    )
-                ),
-            )
-            for row in rows
-        ],
-        ranks=[row["Rank"] for row in rows],
+    # Create 'Rating' objects
+    ratings = [
+        (
+            Rating(
+                *next(
+                    (
+                        (float(rating["Mu"]["N"]), float(rating["Sigma"]["N"]))
+                        for rating in rating_data
+                        if rating["PK"]["S"] == f"SCORE#{score.name}"
+                    ),
+                    (MU, SIGMA),
+                )
+            ),
+        )
+        for score in scores
+    ]
+
+    # Calculate new TrueSkill ratings -- skip if only 1 player played
+    new_ratings = (
+        ratings
+        if len(ratings) == 1
+        else rate(ratings, ranks=[score.rank for score in scores])
     )
 
-    # Save new data
+    # Write updated scores and ratings
     dynamodb.batch_write_item(
         RequestItems={
             TABLE_NAME: [
                 {
                     "PutRequest": {
                         "Item": {
-                            "PK": {"S": f'SCORE#{row["Name"]}'},
+                            "PK": {"S": f"SCORE#{score.name}"},
                             "SK": {"S": f"DATE#{date_str}"},
                             "GSI1PK": {"S": f"YEAR#{date.year}"},
                             "GSI1SK": {"S": f"DATE#{date_str}"},
-                            "Time": {"S": row["Time"]},
-                            "Seconds": {"N": str(row["Seconds"])},
-                            "Rank": {"N": str(row["Rank"])},
+                            "Time": {"S": score.time},
+                            "Seconds": {"N": str(score.seconds)},
+                            "Rank": {"N": str(score.rank)},
                             "Mu": {"N": str(rating.mu)},
                             "Sigma": {"N": str(rating.sigma)},
                             "Eta": {"N": str(rating.exposure)},
                             # GSI2 is a sparse index for excluding midi results
                             **(
                                 {
-                                    "GSI2PK": {"S": f'SCORE#{row["Name"]}'},
+                                    "GSI2PK": {"S": f"SCORE#{score.name}"},
                                     "GSI2SK": {"S": f"DATE#{date_str}"},
                                 }
                                 if date.isoweekday() != 6
@@ -178,7 +188,7 @@ def handler(event, context):
                         }
                     }
                 }
-                for row, (rating,) in zip(rows, new_ratings)
+                for score, (rating,) in zip(scores, new_ratings)
             ]
         }
     )
