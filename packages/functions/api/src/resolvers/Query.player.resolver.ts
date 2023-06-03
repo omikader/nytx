@@ -32,7 +32,7 @@ export const player: QueryResolvers["player"] = async (
 
   return {
     name,
-    lastPlay: player.LastPlay ?? 0,
+    lastPlay: player.LastPlay ?? "N/A",
     gamesPlayed: player.Total ?? 0,
     streak: player.Streak ?? 0,
     maxStreak: player.MaxStreak ?? 0,
