@@ -10,8 +10,8 @@ export const CronStack = ({ stack }: StackContext) => {
   const lambda = new Function(stack, "Lambda", {
     handler: "packages/functions/cron/index.handler",
     runtime: "python3.8",
-    bind: [table, NYT_S],
     retryAttempts: 0,
+    bind: [table, NYT_S],
   });
 
   new Cron(stack, "WeekdayCron", {
