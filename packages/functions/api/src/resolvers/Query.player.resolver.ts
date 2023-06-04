@@ -1,5 +1,4 @@
-import { GraphQLError } from "graphql";
-import { first, isNull, last, orderBy } from "lodash";
+import { first, last, orderBy } from "lodash";
 
 import { QueryResolvers } from "./types";
 import { START, ZONE, parseKey } from "../util";
@@ -21,21 +20,17 @@ export const player: QueryResolvers["player"] = async (
     }),
   ]);
 
-  if (isNull(player)) {
-    throw new GraphQLError("Could not find player");
-  }
-
-  const sk = excludeMidis ? "GSI2SK" : "SK";
   const sortedScores = orderBy(scores, "Seconds");
   const bestScore = first(sortedScores);
   const worstScore = last(sortedScores);
+  const sk = excludeMidis ? "GSI2SK" : "SK";
 
   return {
     name,
-    lastPlay: player.LastPlay,
-    gamesPlayed: player.Total ?? 0,
-    streak: player.Streak ?? 0,
-    maxStreak: player.MaxStreak ?? 0,
+    lastPlay: player?.LastPlay,
+    gamesPlayed: player?.Total ?? 0,
+    streak: player?.Streak ?? 0,
+    maxStreak: player?.MaxStreak ?? 0,
     ...(bestScore && {
       bestScore: {
         name,

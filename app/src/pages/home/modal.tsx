@@ -126,8 +126,8 @@ const PlayerModalContent = ({ name }: { name: string }) => {
           <div className="stat-desc">
             {streak !== 0 &&
               (streakDiff === 0
-                ? "This is your best streak!"
-                : `${streakDiff} from your best streak!`)}
+                ? "This is your longest streak!"
+                : `${streakDiff} off your longest streak!`)}
           </div>
         </div>
       </div>
