@@ -39,12 +39,12 @@ export const HeadToHeadTable = ({ name1, name2, excludeMidis }: IProps) => {
   }
 
   return (
-    <table className="uk-table uk-table-divider">
+    <table className="table table-fixed text-center">
       <thead>
         <tr>
-          <th className="uk-width-small uk-text-center">{name1}</th>
-          <th className="uk-width-small" />
-          <th className="uk-width-small uk-text-center">{name2}</th>
+          <th>{name1}</th>
+          <th />
+          <th>{name2}</th>
         </tr>
       </thead>
       <tbody>

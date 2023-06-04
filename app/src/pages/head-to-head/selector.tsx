@@ -10,16 +10,14 @@ export const HeadToHeadSelector = ({
   handleChange,
 }: IProps) => {
   return (
-    <div className="uk-margin">
+    <div className="mb-5">
       <select
-        className="uk-select uk-form-width-medium"
+        className="select select-bordered"
         onChange={(e) => handleChange(e.target.value)}
-        defaultValue={"_nytx_default_"}
       >
-        <option value={"_nytx_default_"} disabled>
+        <option disabled selected>
           {caption}
         </option>
-
         {options.map((name) => (
           <option key={name}>{name}</option>
         ))}

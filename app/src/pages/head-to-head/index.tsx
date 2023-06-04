@@ -1,7 +1,7 @@
 import { chain, isUndefined, lowerCase, reject } from "lodash";
 import { useState } from "react";
 
-import { ExcludeMidisCheckbox } from "./checkbox";
+import { ExcludeMidisToggle } from "./toggle";
 import { HeadToHeadSelector } from "./selector";
 import { HeadToHeadTable } from "./table";
 import { usePuzzle } from "../../hooks";
@@ -19,7 +19,7 @@ export const HeadToHeadPage = () => {
 
   return (
     <div>
-      <form>
+      <form className="join join-vertical">
         <HeadToHeadSelector
           options={reject(options, (name) => name === name2)}
           caption="Choose a player..."
@@ -30,7 +30,7 @@ export const HeadToHeadPage = () => {
           caption="Choose another..."
           handleChange={setName2}
         />
-        <ExcludeMidisCheckbox
+        <ExcludeMidisToggle
           excludeMidis={excludeMidis}
           handleChange={flipExcludeMidis}
         />
