@@ -16,12 +16,12 @@ export const Leaderboard = ({ data }: IProps) => {
 
   return (
     <>
-      <table className="uk-table uk-table-small uk-table-striped uk-table-hover">
+      <table className="table text-center table-zebra">
         <thead>
           <tr>
-            <th className="uk-width-small uk-text-center">Rank</th>
-            <th className="uk-width-small uk-text-center">Name</th>
-            <th className="uk-width-small uk-text-center">Time</th>
+            <th>Rank</th>
+            <th>Name</th>
+            <th>Time</th>
           </tr>
         </thead>
         <tbody>
