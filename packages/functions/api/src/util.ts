@@ -10,6 +10,9 @@ export const parseKey = (key: string): string => {
 export const toHHMMSS = (seconds: number): string => {
   return match({ seconds })
     .with({ seconds: 0 }, () => "--")
+    .with({ seconds: P.when((val) => val < 600) }, () =>
+      new Date(seconds * 1000).toISOString().substring(15, 19)
+    )
     .with({ seconds: P.when((val) => val < 3600) }, () =>
       new Date(seconds * 1000).toISOString().substring(14, 19)
     )

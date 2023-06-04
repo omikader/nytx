@@ -1,7 +1,7 @@
-import { first, last, orderBy } from "lodash";
+import { first, last, meanBy, orderBy } from "lodash";
 
 import { QueryResolvers } from "./types";
-import { START, ZONE, parseKey } from "../util";
+import { START, ZONE, parseKey, toHHMMSS } from "../util";
 
 export const player: QueryResolvers["player"] = async (
   _,
@@ -20,6 +20,7 @@ export const player: QueryResolvers["player"] = async (
     }),
   ]);
 
+  const averageTime = meanBy(scores, "Seconds");
   const sortedScores = orderBy(scores, "Seconds");
   const bestScore = first(sortedScores);
   const worstScore = last(sortedScores);
@@ -31,6 +32,7 @@ export const player: QueryResolvers["player"] = async (
     gamesPlayed: player?.Total ?? 0,
     streak: player?.Streak ?? 0,
     maxStreak: player?.MaxStreak ?? 0,
+    ...(averageTime && { averageTime: toHHMMSS(averageTime) }),
     ...(bestScore && {
       bestScore: {
         name,

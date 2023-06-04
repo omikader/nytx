@@ -20,6 +20,7 @@ export type Scalars = {
 
 export type Player = {
   __typename?: 'Player';
+  averageTime?: Maybe<Scalars['String']['output']>;
   bestScore?: Maybe<Score>;
   gamesPlayed: Scalars['Int']['output'];
   lastPlay?: Maybe<Scalars['String']['output']>;
@@ -192,6 +193,7 @@ export interface DateTimeScalarConfig extends GraphQLScalarTypeConfig<ResolversT
 }
 
 export type PlayerResolvers<ContextType = IContext, ParentType extends ResolversParentTypes['Player'] = ResolversParentTypes['Player']> = {
+  averageTime?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   bestScore?: Resolver<Maybe<ResolversTypes['Score']>, ParentType, ContextType>;
   gamesPlayed?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   lastPlay?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;

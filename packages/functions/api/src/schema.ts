@@ -20,6 +20,7 @@ export const typeDefs = gql`
     maxStreak: Int!
     bestScore: Score
     worstScore: Score
+    averageTime: String
   }
 
   type Score {
