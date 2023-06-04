@@ -65,7 +65,7 @@ export const HeadToHeadTable = ({ name1, name2, excludeMidis }: IProps) => {
         </tr>
         <tr>
           <td>{data.headToHead.stats1.avg}</td>
-          <td>Avg. Time</td>
+          <td>Average Time</td>
           <td>{data.headToHead.stats2.avg}</td>
         </tr>
       </tbody>
