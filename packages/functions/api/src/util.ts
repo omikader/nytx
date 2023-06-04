@@ -1,6 +1,6 @@
 import { P, match } from "ts-pattern";
 
-export const START = "2023-05-30";
+export const START = "2023-06-03";
 export const ZONE = "America/New_York";
 
 export const parseKey = (key: string): string => {
