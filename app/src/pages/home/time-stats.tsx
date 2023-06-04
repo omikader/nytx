@@ -16,14 +16,14 @@ export const TimeStats = ({ bestScore, worstScore, averageTime }: IProps) => {
       </div>
 
       <div className="stat p-4">
-        <div className="stat-title">Worst</div>
-        <div className="stat-value">{worstScore.time}</div>
-        <div className="stat-desc">On {worstScore.date}</div>
+        <div className="stat-title">Average</div>
+        <div className="stat-value">{averageTime}</div>
       </div>
 
       <div className="stat p-4">
-        <div className="stat-title">Average</div>
-        <div className="stat-value">{averageTime}</div>
+        <div className="stat-title">Worst</div>
+        <div className="stat-value">{worstScore.time}</div>
+        <div className="stat-desc">On {worstScore.date}</div>
       </div>
     </div>
   );
