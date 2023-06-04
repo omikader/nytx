@@ -9,7 +9,7 @@ export const HomePage = () => {
 
   return (
     <div className="flex flex-col items-center gap-5">
-      <h1 className="font-extrabold text-2xl lg:text-4xl border-b-2 pb-1">
+      <h1 className="font-extrabold text-2xl lg:text-5xl border-b-2 pb-1">
         {date}
       </h1>
 
