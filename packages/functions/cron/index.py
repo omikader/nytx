@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from dynamo import get_players, get_ratings, update_players, write_scores
+from dynamo import get_players, get_ratings, save_data
 from ratings import compute_ratings
 from scrape import scrape
 
@@ -32,5 +32,4 @@ def handler(event, context):
     ratings = compute_ratings(scores, rating_data)
 
     # Save new players, scores and ratings
-    update_players(scores, player_data, date)
-    write_scores(scores, ratings, date)
+    save_data(scores, ratings, player_data, date)
