@@ -28,12 +28,10 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
-    <React.StrictMode>
-      <ApolloProvider client={client}>
-        <PuzzleProvider>
-          <RouterProvider router={router} />
-        </PuzzleProvider>
-      </ApolloProvider>
-    </React.StrictMode>
+    <ApolloProvider client={client}>
+      <PuzzleProvider>
+        <RouterProvider router={router} />
+      </PuzzleProvider>
+    </ApolloProvider>
   </React.StrictMode>
 );

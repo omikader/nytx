@@ -17,10 +17,6 @@ const PUZZLE_CONTEXT_QUERY_DOCUMENT = graphql(`
   }
 `);
 
-interface IProps {
-  children: React.ReactNode;
-}
-
 export interface PuzzleContextType {
   activeLeaderboard: PuzzleContextQuery["activeLeaderboard"];
   nextPuzzleDateTime: PuzzleContextQuery["nextPuzzleDateTime"];
@@ -29,6 +25,10 @@ export interface PuzzleContextType {
 export const PuzzleContext = React.createContext<PuzzleContextType | null>(
   null
 );
+
+interface IProps {
+  children: React.ReactNode;
+}
 
 export const PuzzleProvider = ({ children }: IProps) => {
   const { loading, error, data } = useQuery(PUZZLE_CONTEXT_QUERY_DOCUMENT);
