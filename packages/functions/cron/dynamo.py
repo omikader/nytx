@@ -22,8 +22,8 @@ def clear_player_streak(name: str) -> None:
             ConditionExpression=f"attribute_exists(Streak)",
         )
     except ClientError as e:
-        if e.response["Error"]["Code"] == "ConditionalCheckFailedException":
-            return
+        if e.response["Error"]["Code"] != "ConditionalCheckFailedException":
+            raise
 
 
 def get_players(scores: List[scrape.Score]) -> None:
