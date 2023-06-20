@@ -1,7 +1,7 @@
 import * as React from "react";
-import { useQuery } from "@apollo/client";
+import { ApolloQueryResult, useQuery } from "@apollo/client";
 
-import { Error, Loader } from "../components";
+import { ApolloErrorToast, Spinner } from "../components";
 import { PuzzleContextQuery } from "../gql/graphql";
 import { graphql } from "../gql";
 
@@ -20,6 +20,7 @@ const PUZZLE_CONTEXT_QUERY_DOCUMENT = graphql(`
 export interface PuzzleContextType {
   activeLeaderboard: PuzzleContextQuery["activeLeaderboard"];
   nextPuzzleDateTime: PuzzleContextQuery["nextPuzzleDateTime"];
+  refetch: () => Promise<ApolloQueryResult<PuzzleContextQuery>>;
 }
 
 export const PuzzleContext = React.createContext<PuzzleContextType | null>(
@@ -31,18 +32,25 @@ interface IProps {
 }
 
 export const PuzzleProvider = ({ children }: IProps) => {
-  const { loading, error, data } = useQuery(PUZZLE_CONTEXT_QUERY_DOCUMENT);
+  const { loading, error, data, refetch } = useQuery(
+    PUZZLE_CONTEXT_QUERY_DOCUMENT,
+    { fetchPolicy: "no-cache" }
+  );
 
   if (error) {
-    return <Error error={error} />;
+    return <ApolloErrorToast error={error} />;
   }
 
   if (loading || !data) {
-    return <Loader />;
+    return (
+      <div className="flex h-screen justify-center items-center">
+        <Spinner />
+      </div>
+    );
   }
 
   return (
-    <PuzzleContext.Provider value={{ ...data }}>
+    <PuzzleContext.Provider value={{ ...data, refetch }}>
       {children}
     </PuzzleContext.Provider>
   );

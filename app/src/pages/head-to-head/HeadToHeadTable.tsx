@@ -1,6 +1,6 @@
 import { useQuery } from "@apollo/client";
 
-import { Error, Loader } from "../../components";
+import { ApolloErrorToast, Spinner } from "../../components";
 import { graphql } from "../../gql";
 
 const HEAD_TO_HEAD_QUERY_DOCUMENT = graphql(`
@@ -31,11 +31,11 @@ export const HeadToHeadTable = ({ name1, name2, excludeMidis }: IProps) => {
   });
 
   if (error) {
-    return <Error error={error} />;
+    return <ApolloErrorToast error={error} />;
   }
 
   if (loading || !data) {
-    return <Loader />;
+    return <Spinner />;
   }
 
   return (
@@ -47,22 +47,26 @@ export const HeadToHeadTable = ({ name1, name2, excludeMidis }: IProps) => {
           <th>{name2}</th>
         </tr>
       </thead>
+
       <tbody>
         <tr>
           <td>{data.headToHead.wins}</td>
           <td>Wins</td>
           <td>{data.headToHead.losses}</td>
         </tr>
+
         <tr>
           <td>{data.headToHead.losses}</td>
           <td>Losses</td>
           <td>{data.headToHead.wins}</td>
         </tr>
+
         <tr>
           <td>{data.headToHead.ties}</td>
           <td>Ties</td>
           <td>{data.headToHead.ties}</td>
         </tr>
+
         <tr>
           <td>{data.headToHead.stats1.avg}</td>
           <td>Average Time</td>

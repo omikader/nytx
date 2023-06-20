@@ -39,6 +39,7 @@ export const player: QueryResolvers["player"] = async (
         date: parseKey(bestScore[sk]),
         time: bestScore.Time,
         rank: bestScore.Rank,
+        seconds: bestScore.Seconds,
       },
     }),
     ...(worstScore && {
@@ -47,6 +48,7 @@ export const player: QueryResolvers["player"] = async (
         date: parseKey(worstScore[sk]),
         time: worstScore.Time,
         rank: worstScore.Rank,
+        seconds: worstScore.Seconds,
       },
     }),
   };

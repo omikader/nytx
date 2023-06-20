@@ -8,15 +8,15 @@ export const parseKey = (key: string): string => {
 };
 
 export const toHHMMSS = (seconds: number): string => {
-  return match({ seconds })
-    .with({ seconds: 0 }, () => "--")
-    .with({ seconds: P.when((val) => val < 600) }, () =>
-      new Date(seconds * 1000).toISOString().substring(15, 19)
-    )
-    .with({ seconds: P.when((val) => val < 3600) }, () =>
-      new Date(seconds * 1000).toISOString().substring(14, 19)
-    )
-    .otherwise(({ seconds }) =>
-      new Date(seconds * 1000).toISOString().substring(11, 16)
-    );
+  const date = new Date(seconds * 1000);
+
+  return match({ ms: date.getTime() })
+    .with({ ms: 0 }, () => "--")
+    .with({ ms: P.lt(600e3) }, () => date.toISOString().substring(15, 19))
+    .with({ ms: P.lt(3600e3) }, () => date.toISOString().substring(14, 19))
+    .otherwise(() => date.toISOString().substring(11, 16));
+};
+
+export const fromHHMMSS = (time: string): number => {
+  return time.split(":").reduce((acc, time) => 60 * acc + +time, 0);
 };

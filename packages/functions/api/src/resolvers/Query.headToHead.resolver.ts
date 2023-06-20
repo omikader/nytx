@@ -9,8 +9,8 @@ export const headToHead: QueryResolvers["headToHead"] = async (
   { dataSources }
 ) => {
   const end = new Date().toLocaleDateString("en-US", { timeZone: ZONE });
-  const params = { start: START, end, excludeMidis };
 
+  const params = { start: START, end, excludeMidis };
   const [scores1, scores2] = await Promise.all([
     dataSources.dynamoAPI.fetchPlayerScoresInDateRange({
       name: name1,

@@ -1,6 +1,6 @@
 import { isUndefined } from "lodash";
 
-import { PlayerModalContent } from "./modal-content";
+import { PlayerModalContent } from "./PlayerModalContent";
 
 interface IProps {
   name: string | undefined;
@@ -16,6 +16,7 @@ export const PlayerModal = ({ name, handleClose }: IProps) => {
       <form method="dialog" className="modal-box">
         {name && <PlayerModalContent name={name} />}
       </form>
+
       <form method="dialog" className="modal-backdrop">
         <button onClick={handleClose} />
       </form>

@@ -16,7 +16,7 @@ export default {
   stacks(app) {
     // Set default runtime for all functions
     app.setDefaultFunctionProps({
-      runtime: "nodejs16.x",
+      runtime: "nodejs18.x",
     });
 
     app

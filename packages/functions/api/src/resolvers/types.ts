@@ -72,6 +72,7 @@ export type Score = {
   date: Scalars['String']['output'];
   name: Scalars['String']['output'];
   rank: Scalars['String']['output'];
+  seconds: Scalars['Int']['output'];
   time: Scalars['String']['output'];
 };
 
@@ -226,6 +227,7 @@ export type ScoreResolvers<ContextType = IContext, ParentType extends ResolversP
   date?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   rank?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  seconds?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   time?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };

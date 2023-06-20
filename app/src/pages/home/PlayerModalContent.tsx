@@ -1,10 +1,10 @@
 import { useQuery } from "@apollo/client";
 import { useState } from "react";
 
-import { Error, Loader } from "../../components";
-import { PlayerModalHeader } from "./modal-header";
-import { PlayerStats } from "./player-stats";
-import { TimeStats } from "./time-stats";
+import { ApolloErrorToast, Spinner } from "../../components";
+import { PlayerModalHeader } from "./PlayerModalHeader";
+import { PlayerStats } from "./PlayerStats";
+import { TimeStats } from "./TimeStats";
 import { graphql } from "../../gql";
 
 const PLAYER_MODAL_QUERY_DOCUMENT = graphql(`
@@ -18,10 +18,12 @@ const PLAYER_MODAL_QUERY_DOCUMENT = graphql(`
       bestScore {
         date
         time
+        seconds
       }
       worstScore {
         date
         time
+        seconds
       }
     }
   }
@@ -39,17 +41,17 @@ export const PlayerModalContent = ({ name }: IProps) => {
   });
 
   if (error) {
-    return <Error error={error} />;
+    return <ApolloErrorToast error={error} />;
   }
 
   if (loading || !data) {
-    return <Loader />;
+    return <Spinner />;
   }
 
   const { bestScore, worstScore, averageTime } = data.player;
 
   return (
-    <div className="flex flex-col items-center gap-5">
+    <div className="flex flex-col items-center gap-5 text-center">
       <PlayerModalHeader name={name} playerData={data.player} />
 
       <PlayerStats playerData={data.player} />
@@ -57,6 +59,7 @@ export const PlayerModalContent = ({ name }: IProps) => {
       {bestScore && worstScore && averageTime && (
         <>
           <div className="divider">Stats</div>
+
           <TimeStats
             bestScore={bestScore}
             worstScore={worstScore}

@@ -28,6 +28,7 @@ export const typeDefs = gql`
     date: String!
     time: String!
     rank: String!
+    seconds: Int!
   }
 
   type Rating {

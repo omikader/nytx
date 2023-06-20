@@ -6,7 +6,7 @@ import boto3
 from botocore.exceptions import ClientError
 from trueskill import Rating
 
-import scrape
+import nyt
 
 TABLE_NAME = os.environ["SST_Table_tableName_Entity"]
 DYNAMODB = boto3.client("dynamodb")
@@ -26,7 +26,7 @@ def clear_player_streak(name: str) -> None:
             raise
 
 
-def get_players(scores: List[scrape.Score]) -> None:
+def get_players(scores: List[nyt.Score]) -> None:
     return DYNAMODB.batch_get_item(
         RequestItems={
             TABLE_NAME: {
@@ -56,7 +56,7 @@ def get_ratings(player_data: Dict[str, Any]) -> Dict[str, Any]:
 
 
 def format_player_updates(
-    scores: List[scrape.Score], player_data: Dict[str, Any], date: datetime
+    scores: List[nyt.Score], player_data: Dict[str, Any], date: datetime
 ) -> None:
     updates = []
     date_str = date.strftime("%Y-%m-%d")
@@ -91,7 +91,7 @@ def format_player_updates(
 
 
 def format_score_writes(
-    scores: List[scrape.Score], ratings: List[Tuple[Rating]], date: datetime
+    scores: List[nyt.Score], ratings: List[Tuple[Rating]], date: datetime
 ) -> None:
     date_str = date.strftime("%Y-%m-%d")
     return (
@@ -126,7 +126,7 @@ def format_score_writes(
 
 
 def save_data(
-    scores: List[scrape.Score],
+    scores: List[nyt.Score],
     ratings: List[Tuple[Rating]],
     player_data: Dict[str, Any],
     date: datetime,

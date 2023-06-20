@@ -1,4 +1,5 @@
 import { QueryResolvers } from "./types";
+import { fromHHMMSS } from "../util";
 
 export const activeLeaderboard: QueryResolvers["activeLeaderboard"] = async (
   _,
@@ -22,6 +23,7 @@ export const activeLeaderboard: QueryResolvers["activeLeaderboard"] = async (
       date,
       time,
       rank,
+      seconds: fromHHMMSS(time),
     };
   });
 };

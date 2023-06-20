@@ -121,13 +121,14 @@ export class DynamoAPI {
       TableName,
       IndexName: "GSI1",
       KeyConditionExpression: "#PK = :pk AND #SK = :sk",
-      ProjectionExpression: "#Name,#Time,#Rank",
+      ProjectionExpression: "#Name,#Time,#Rank,#Seconds",
       ExpressionAttributeNames: {
         "#PK": "GSI1PK",
         "#SK": "GSI1SK",
         "#Name": "PK",
         "#Time": "Time",
         "#Rank": "Rank",
+        "#Seconds": "Seconds",
       },
       ExpressionAttributeValues: {
         ":pk": { S: `YEAR#${year}` },

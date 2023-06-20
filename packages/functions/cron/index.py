@@ -1,8 +1,8 @@
 from datetime import datetime
 
 from dynamo import get_players, get_ratings, save_data
+from nyt import scrape
 from ratings import compute_ratings
-from scrape import scrape
 
 
 def handler(event, context):

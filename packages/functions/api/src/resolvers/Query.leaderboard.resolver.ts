@@ -14,5 +14,6 @@ export const leaderboard: QueryResolvers["leaderboard"] = async (
       date,
       time: score.Time,
       rank: score.Rank,
+      seconds: score.Seconds,
     }));
 };

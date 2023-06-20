@@ -8,17 +8,17 @@ interface IProps {
 export const ExcludeMidisToggle = ({ excludeMidis, handleChange }: IProps) => {
   return (
     <div
-      className="form-control tooltip tooltip-bottom mb-5"
+      className="form-control tooltip tooltip-bottom"
       data-tip="Ignore Saturday puzzles from the analysis"
     >
       <label className="label cursor-pointer">
+        <span className="label-text">Exclude Midis?</span>
         <input
           type="checkbox"
-          className="toggle"
+          className="toggle toggle-primary"
           checked={excludeMidis}
           onChange={() => handleChange((prev) => !prev)}
         />
-        <span className="label-text">Exclude Midis?</span>
       </label>
     </div>
   );

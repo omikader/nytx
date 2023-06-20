@@ -15,7 +15,7 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
 const documents = {
     "\n  query PuzzleContext {\n    nextPuzzleDateTime\n    activeLeaderboard {\n      name\n      date\n      time\n      rank\n    }\n  }\n": types.PuzzleContextDocument,
     "\n  query HeadToHead($name1: String!, $name2: String!, $excludeMidis: Boolean!) {\n    headToHead(name1: $name1, name2: $name2, excludeMidis: $excludeMidis) {\n      wins\n      losses\n      ties\n      stats1 {\n        avg\n      }\n      stats2 {\n        avg\n      }\n    }\n  }\n": types.HeadToHeadDocument,
-    "\n  query PlayerModal($name: String!, $excludeMidis: Boolean!) {\n    player(name: $name, excludeMidis: $excludeMidis) {\n      gamesPlayed\n      streak\n      maxStreak\n      lastPlay\n      averageTime\n      bestScore {\n        date\n        time\n      }\n      worstScore {\n        date\n        time\n      }\n    }\n  }\n": types.PlayerModalDocument,
+    "\n  query PlayerModal($name: String!, $excludeMidis: Boolean!) {\n    player(name: $name, excludeMidis: $excludeMidis) {\n      gamesPlayed\n      streak\n      maxStreak\n      lastPlay\n      averageTime\n      bestScore {\n        date\n        time\n        seconds\n      }\n      worstScore {\n        date\n        time\n        seconds\n      }\n    }\n  }\n": types.PlayerModalDocument,
     "\n  query Ratings {\n    ratings {\n      name\n      date\n      eta\n    }\n  }\n": types.RatingsDocument,
 };
 
@@ -44,7 +44,7 @@ export function graphql(source: "\n  query HeadToHead($name1: String!, $name2: S
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  query PlayerModal($name: String!, $excludeMidis: Boolean!) {\n    player(name: $name, excludeMidis: $excludeMidis) {\n      gamesPlayed\n      streak\n      maxStreak\n      lastPlay\n      averageTime\n      bestScore {\n        date\n        time\n      }\n      worstScore {\n        date\n        time\n      }\n    }\n  }\n"): (typeof documents)["\n  query PlayerModal($name: String!, $excludeMidis: Boolean!) {\n    player(name: $name, excludeMidis: $excludeMidis) {\n      gamesPlayed\n      streak\n      maxStreak\n      lastPlay\n      averageTime\n      bestScore {\n        date\n        time\n      }\n      worstScore {\n        date\n        time\n      }\n    }\n  }\n"];
+export function graphql(source: "\n  query PlayerModal($name: String!, $excludeMidis: Boolean!) {\n    player(name: $name, excludeMidis: $excludeMidis) {\n      gamesPlayed\n      streak\n      maxStreak\n      lastPlay\n      averageTime\n      bestScore {\n        date\n        time\n        seconds\n      }\n      worstScore {\n        date\n        time\n        seconds\n      }\n    }\n  }\n"): (typeof documents)["\n  query PlayerModal($name: String!, $excludeMidis: Boolean!) {\n    player(name: $name, excludeMidis: $excludeMidis) {\n      gamesPlayed\n      streak\n      maxStreak\n      lastPlay\n      averageTime\n      bestScore {\n        date\n        time\n        seconds\n      }\n      worstScore {\n        date\n        time\n        seconds\n      }\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

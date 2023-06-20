@@ -1,2 +1,2 @@
-export { Error } from "./error";
-export { Loader } from "./loader";
+export { ApolloErrorToast } from "./ApolloErrorToast";
+export { Spinner } from "./Spinner";

@@ -13,9 +13,9 @@
     "packages/**"
   ],
   "devDependencies": {
-    "@tsconfig/node16": "^1.0.3",
+    "@tsconfig/node18": "^2.0.1",
     "constructs": "10.1.156",
-    "sst": "2.11.1",
+    "sst": "2.11.18",
     "typescript": "^5.0.4"
   }
 }

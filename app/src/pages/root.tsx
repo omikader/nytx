@@ -1,36 +1,43 @@
 import { Link, Outlet } from "react-router-dom";
 
+import { GitHubIcon } from "../svg";
+
 export const Root = () => {
   return (
-    <div>
-      <div uk-sticky="sel-target: .uk-navbar-container; cls-active: uk-navbar-sticky">
-        <nav className="uk-navbar-container" uk-navbar="true">
-          <div className="uk-navbar-center">
-            <Link className="uk-navbar-item uk-logo" to="/">
-              nytx
-            </Link>
-            <ul className="uk-navbar-nav">
-              <li>
-                <Link to="/ratings">Ratings</Link>
-              </li>
-              <li>
-                <Link to="/h2h">H2H</Link>
-              </li>
-            </ul>
-            <a
-              className="uk-navbar-item"
-              href="https://github.com/omikader/nytx"
-              target="_blank"
-              rel="noopener noreferrer"
-              uk-icon="github"
-            />
-          </div>
-        </nav>
-      </div>
-      <div className="uk-section uk-section-small uk-section-default">
-        <div className="uk-container uk-text-center">
-          <Outlet />
+    <div className="flex flex-col place-items-center">
+      <div className="navbar bg-base-100">
+        <div className="navbar-start" />
+
+        <div className="navbar-center">
+          <Link className="btn btn-ghost normal-case text-2xl" to="/">
+            nytx
+          </Link>
+
+          <ul className="menu menu-horizontal">
+            <li>
+              <Link to="/ratings">Ratings</Link>
+            </li>
+            <li>
+              <Link to="/h2h">H2H</Link>
+            </li>
+          </ul>
+
+          <a
+            aria-label="GitHub"
+            href="https://github.com/omikader/nytx"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn btn-ghost btn-circle"
+          >
+            <GitHubIcon />
+          </a>
         </div>
+
+        <div className="navbar-end" />
+      </div>
+
+      <div className="py-12 w-11/12">
+        <Outlet />
       </div>
     </div>
   );

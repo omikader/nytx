@@ -2,11 +2,11 @@ from typing import Any, Dict, List, Union
 
 from trueskill import MU, Rating, SIGMA, rate
 
-import scrape
+import nyt
 
 
 def compute_ratings(
-    scores: List[scrape.Score], rating_data: Union[bool, List[Dict[str, Any]]]
+    scores: List[nyt.Score], rating_data: Union[bool, List[Dict[str, Any]]]
 ) -> List[Rating]:
     ratings = (
         [(Rating(),)] * len(scores)

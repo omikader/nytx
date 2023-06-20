@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { PlayerModal } from "./modal";
+import { PlayerModal } from "./PlayerModal";
 import { PuzzleContextType } from "../../contexts";
 
 interface IProps {
@@ -24,6 +24,7 @@ export const Leaderboard = ({ data }: IProps) => {
             <th>Time</th>
           </tr>
         </thead>
+
         <tbody>
           {data.map(({ name, time, rank }) => (
             <tr key={name}>

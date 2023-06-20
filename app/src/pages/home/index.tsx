@@ -1,5 +1,5 @@
-import { CountdownClock } from "./countdown";
-import { Leaderboard } from "./table";
+import { CountdownClock } from "./CountdownClock";
+import { Leaderboard } from "./Leaderboard";
 import { usePuzzle } from "../../hooks";
 
 export const HomePage = () => {

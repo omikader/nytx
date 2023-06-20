@@ -1,8 +1,8 @@
 import { chain, uniq } from "lodash";
 import { useQuery } from "@apollo/client";
 
-import { Error, Loader } from "../../components";
-import { RatingLineChart } from "./chart";
+import { ApolloErrorToast, Spinner } from "../../components";
+import { RatingLineChart } from "./RatingLineChart";
 import { graphql } from "../../gql";
 
 const RATINGS_QUERY_DOCUMENT = graphql(`
@@ -19,11 +19,11 @@ export const Component = () => {
   const { loading, error, data } = useQuery(RATINGS_QUERY_DOCUMENT);
 
   if (error) {
-    return <Error error={error} />;
+    return <ApolloErrorToast error={error} />;
   }
 
   if (loading || !data) {
-    return <Loader />;
+    return <Spinner />;
   }
 
   const chartData = chain(data.ratings)
@@ -41,10 +41,7 @@ export const Component = () => {
   const labels = uniq(data.ratings.map(({ name }) => name));
 
   return (
-    <div
-      uk-height-viewport="offset-top: true"
-      className="uk-height-large uk-width-1-1"
-    >
+    <div className="h-[calc(100vh-120px)] text-center">
       <RatingLineChart data={chartData} labels={labels} />
     </div>
   );

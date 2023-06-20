@@ -1,17 +1,10 @@
+import { WarningIcon } from "../svg";
+
 export const NotFoundPage = () => {
   return (
-    <div className="uk-flex uk-flex-middle uk-position-center">
-      <div>
-        <span
-          className="uk-margin-small-right"
-          uk-icon="icon: warning; ratio: 3"
-        ></span>
-      </div>
-      <div>
-        <h1 className="uk-heading uk-margin-remove uk-padding-remove">
-          Oops! Page not found
-        </h1>
-      </div>
+    <div className="flex gap-5 h-screen justify-center items-center">
+      <WarningIcon size={16} />
+      <h1 className="text-2xl">Oops! Page not found</h1>
     </div>
   );
 };

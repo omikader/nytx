@@ -1,4 +1,4 @@
-import { InfoIcon, LightningIcon } from "../../svg/";
+import { InfoIcon, LightningIcon } from "../../svg";
 import { PlayerModalQuery } from "../../gql/graphql";
 
 interface IProps {
@@ -7,10 +7,10 @@ interface IProps {
 
 export const PlayerStats = ({ playerData }: IProps) => {
   const { gamesPlayed, lastPlay, streak, maxStreak } = playerData;
-  const streakDiff = maxStreak - streak;
 
   const gamesPlayedMsg = `Last play on ${lastPlay}`;
 
+  const streakDiff = maxStreak - streak;
   const streakMsg =
     streakDiff === 0
       ? "This is your longest streak!"
@@ -31,9 +31,10 @@ export const PlayerStats = ({ playerData }: IProps) => {
         <div className="stat-figure">
           <LightningIcon />
         </div>
+
         <div className="stat-title">Streak</div>
         <div className="stat-value">{streak}</div>
-        {streak > 0 && <div className="stat-desc">{streakMsg}</div>}
+        {maxStreak > 0 && <div className="stat-desc">{streakMsg}</div>}
       </div>
     </div>
   );
