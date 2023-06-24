@@ -1,64 +1,44 @@
-import { chain, isNull, lowerCase, reject } from "lodash";
+import { isNull } from "lodash";
 import { useState } from "react";
 
-import { ExcludeMidisToggle } from "./ExcludeMidisToggle";
-import { HeadToHeadSelector } from "./HeadToHeadSelector";
-import { HeadToHeadTable } from "./HeadToHeadTable";
-import { usePuzzle } from "../../hooks";
+import { HeadToHeadChart } from "./HeadToHeadChart";
+import { HeadToHeadForm } from "./HeadToHeadForm";
 
-export const HeadToHeadPage = () => {
+export const Component = () => {
   const [name1, setName1] = useState<string | null>(null);
   const [name2, setName2] = useState<string | null>(null);
   const [excludeMidis, flipExcludeMidis] = useState(false);
 
-  const { activeLeaderboard } = usePuzzle();
-
-  const options = chain(activeLeaderboard)
-    .map("name")
-    .orderBy(lowerCase)
-    .value();
-
   return (
-    <div className="flex flex-col md:flex-row justify-center gap-5">
-      <div className="card shadow-2xl">
-        <div className="card-body">
-          <form className="join join-vertical gap-5">
-            <HeadToHeadSelector
-              options={reject(options, (name) => name === name2)}
-              label="Choose player one"
-              defaultValue="Choose a player..."
-              handleChange={setName1}
-            />
+    <div className="flex justify-center">
+      <div className="card shadow-2xl w-fit">
+        <div className="card-body flex flex-col md:flex-row place-items-center gap-5">
+          <HeadToHeadForm
+            name1={name1}
+            name2={name2}
+            excludeMidis={excludeMidis}
+            handleChangeName1={setName1}
+            handleChangeName2={setName2}
+            handleFlipExcludeMidis={flipExcludeMidis}
+          />
 
-            <HeadToHeadSelector
-              options={reject(options, (name) => name === name1)}
-              label="Choose player two"
-              defaultValue="Choose a another..."
-              handleChange={setName2}
-            />
+          {!isNull(name1) && !isNull(name2) && (
+            <>
+              <div className="divider md:divider-horizontal" />
 
-            <ExcludeMidisToggle
-              excludeMidis={excludeMidis}
-              handleChange={flipExcludeMidis}
-            />
-          </form>
+              <div className="grow">
+                <HeadToHeadChart
+                  name1={name1}
+                  name2={name2}
+                  excludeMidis={excludeMidis}
+                />
+              </div>
+            </>
+          )}
         </div>
       </div>
-
-      {!isNull(name1) && !isNull(name2) && (
-        <>
-          <div className="divider md:divider-horizontal" />
-          <div className="card shadow-2xl grow">
-            <div className="card-body">
-              <HeadToHeadTable
-                name1={name1}
-                name2={name2}
-                excludeMidis={excludeMidis}
-              />
-            </div>
-          </div>
-        </>
-      )}
     </div>
   );
 };
+
+Component.displayName = "HeadToHeadPage";

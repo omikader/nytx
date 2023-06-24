@@ -5,7 +5,7 @@ import * as ReactDOM from "react-dom/client";
 import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 
-import { HeadToHeadPage, HomePage, NotFoundPage, Root } from "./pages";
+import { HomePage, NotFoundPage, Root } from "./pages";
 import { PuzzleProvider } from "./contexts";
 
 const client = new ApolloClient({
@@ -21,7 +21,7 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <HomePage /> },
       { path: "ratings", lazy: () => import("./pages/ratings") },
-      { path: "h2h", element: <HeadToHeadPage /> },
+      { path: "h2h", lazy: () => import("./pages/head-to-head") },
     ],
   },
 ]);

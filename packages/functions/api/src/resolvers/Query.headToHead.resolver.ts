@@ -1,7 +1,7 @@
-import { size } from "lodash";
+import { intersectionBy, zipWith } from "lodash";
 
 import { QueryResolvers } from "./types";
-import { START, ZONE, toHHMMSS } from "../util";
+import { START, ZONE } from "../util";
 
 export const headToHead: QueryResolvers["headToHead"] = async (
   _,
@@ -9,7 +9,6 @@ export const headToHead: QueryResolvers["headToHead"] = async (
   { dataSources }
 ) => {
   const end = new Date().toLocaleDateString("en-US", { timeZone: ZONE });
-
   const params = { start: START, end, excludeMidis };
   const [scores1, scores2] = await Promise.all([
     dataSources.dynamoAPI.fetchPlayerScoresInDateRange({
@@ -23,50 +22,19 @@ export const headToHead: QueryResolvers["headToHead"] = async (
   ]);
 
   const sk = excludeMidis ? "GSI2SK" : "SK";
+  const commonScores1 = intersectionBy(scores1, scores2, sk);
+  const commonScores2 = intersectionBy(scores2, scores1, sk);
 
-  let i = 0;
-  let j = 0;
-  let wins = 0;
-  let ties = 0;
-  let losses = 0;
-  let avg1 = 0;
-  let avg2 = 0;
-
-  while (i < size(scores1) && j < size(scores2)) {
-    const score1 = scores1[i];
-    const score2 = scores2[j];
-
-    if (score1[sk] < score2[sk]) {
-      i++;
-    } else if (score1[sk] > score2[sk]) {
-      j++;
-    } else {
-      i++;
-      j++;
-
-      avg1 += score1.Seconds;
-      avg2 += score2.Seconds;
-      if (score1.Rank < score2.Rank) {
-        wins += 1;
-      } else if (score1.Rank > score2.Rank) {
-        losses += 1;
-      } else {
-        ties += 1;
-      }
-    }
-  }
-
-  const commonGamesPlayed = wins + ties + losses;
-  if (commonGamesPlayed > 0) {
-    avg1 /= commonGamesPlayed;
-    avg2 /= commonGamesPlayed;
-  }
-
-  return {
-    wins,
-    losses,
-    ties,
-    stats1: { avg: toHHMMSS(avg1) },
-    stats2: { avg: toHHMMSS(avg2) },
-  };
+  return zipWith(
+    commonScores1,
+    commonScores2,
+    ({ Rank: rank1 }, { Rank: rank2 }) => ({ rank1, rank2 })
+  ).reduce(
+    (acc, { rank1, rank2 }) => {
+      if (rank1 < rank2) return { ...acc, wins: acc.wins + 1 };
+      if (rank1 > rank2) return { ...acc, losses: acc.losses + 1 };
+      return { ...acc, ties: acc.ties + 1 };
+    },
+    { wins: 0, losses: 0, ties: 0 }
+  );
 };

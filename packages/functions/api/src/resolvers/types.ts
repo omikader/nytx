@@ -79,15 +79,8 @@ export type Score = {
 export type Series = {
   __typename?: 'Series';
   losses: Scalars['Int']['output'];
-  stats1: Stats;
-  stats2: Stats;
   ties: Scalars['Int']['output'];
   wins: Scalars['Int']['output'];
-};
-
-export type Stats = {
-  __typename?: 'Stats';
-  avg: Scalars['String']['output'];
 };
 
 
@@ -170,7 +163,6 @@ export type ResolversTypes = {
   Rating: ResolverTypeWrapper<Rating>;
   Score: ResolverTypeWrapper<Score>;
   Series: ResolverTypeWrapper<Series>;
-  Stats: ResolverTypeWrapper<Stats>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
 };
 
@@ -185,7 +177,6 @@ export type ResolversParentTypes = {
   Rating: Rating;
   Score: Score;
   Series: Series;
-  Stats: Stats;
   String: Scalars['String']['output'];
 };
 
@@ -234,15 +225,8 @@ export type ScoreResolvers<ContextType = IContext, ParentType extends ResolversP
 
 export type SeriesResolvers<ContextType = IContext, ParentType extends ResolversParentTypes['Series'] = ResolversParentTypes['Series']> = {
   losses?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  stats1?: Resolver<ResolversTypes['Stats'], ParentType, ContextType>;
-  stats2?: Resolver<ResolversTypes['Stats'], ParentType, ContextType>;
   ties?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   wins?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type StatsResolvers<ContextType = IContext, ParentType extends ResolversParentTypes['Stats'] = ResolversParentTypes['Stats']> = {
-  avg?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -253,6 +237,5 @@ export type Resolvers<ContextType = IContext> = {
   Rating?: RatingResolvers<ContextType>;
   Score?: ScoreResolvers<ContextType>;
   Series?: SeriesResolvers<ContextType>;
-  Stats?: StatsResolvers<ContextType>;
 };
 

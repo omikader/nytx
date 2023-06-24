@@ -43,11 +43,5 @@ export const typeDefs = gql`
     wins: Int!
     losses: Int!
     ties: Int!
-    stats1: Stats!
-    stats2: Stats!
-  }
-
-  type Stats {
-    avg: String!
   }
 `;
