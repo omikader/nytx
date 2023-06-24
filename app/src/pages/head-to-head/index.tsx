@@ -1,4 +1,4 @@
-import { chain, isUndefined, lowerCase, reject } from "lodash";
+import { chain, isNull, lowerCase, reject } from "lodash";
 import { useState } from "react";
 
 import { ExcludeMidisToggle } from "./ExcludeMidisToggle";
@@ -7,8 +7,8 @@ import { HeadToHeadTable } from "./HeadToHeadTable";
 import { usePuzzle } from "../../hooks";
 
 export const HeadToHeadPage = () => {
-  const [name1, setName1] = useState<string>();
-  const [name2, setName2] = useState<string>();
+  const [name1, setName1] = useState<string | null>(null);
+  const [name2, setName2] = useState<string | null>(null);
   const [excludeMidis, flipExcludeMidis] = useState(false);
 
   const { activeLeaderboard } = usePuzzle();
@@ -45,7 +45,7 @@ export const HeadToHeadPage = () => {
         </div>
       </div>
 
-      {!isUndefined(name1) && !isUndefined(name2) && (
+      {!isNull(name1) && !isNull(name2) && (
         <>
           <div className="divider md:divider-horizontal" />
           <div className="card shadow-2xl grow">

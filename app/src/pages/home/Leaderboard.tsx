@@ -8,10 +8,10 @@ interface IProps {
 }
 
 export const Leaderboard = ({ data }: IProps) => {
-  const [name, setName] = useState<string>();
+  const [name, setName] = useState<string | null>(null);
 
   const handleClose = () => {
-    setName(undefined);
+    setName(null);
   };
 
   return (

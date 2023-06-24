@@ -6,14 +6,14 @@ interface IProps {
 }
 
 export const ApolloErrorToast = ({ error }: IProps) => {
-  const [isVisible, setIsVisible] = useState(true);
+  const [isHidden, setIsHidden] = useState(false);
 
   useEffect(() => {
-    const timer = setTimeout(() => setIsVisible(false), 3000);
+    const timer = setTimeout(() => setIsHidden(true), 3000);
     return () => clearTimeout(timer);
-  }, [setIsVisible]);
+  }, [setIsHidden]);
 
-  return isVisible ? (
+  return isHidden ? null : (
     <div className="toast">
       <div className="alert alert-error">
         <span className="text-sm">
@@ -21,5 +21,5 @@ export const ApolloErrorToast = ({ error }: IProps) => {
         </span>
       </div>
     </div>
-  ) : null;
+  );
 };

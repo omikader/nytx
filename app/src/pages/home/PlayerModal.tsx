@@ -1,18 +1,15 @@
-import { isUndefined } from "lodash";
+import { isNull } from "lodash";
 
 import { PlayerModalContent } from "./PlayerModalContent";
 
 interface IProps {
-  name: string | undefined;
+  name: string | null;
   handleClose: () => void;
 }
 
 export const PlayerModal = ({ name, handleClose }: IProps) => {
   return (
-    <dialog
-      className="modal modal-bottom sm:modal-middle"
-      open={!isUndefined(name)}
-    >
+    <dialog className="modal modal-bottom sm:modal-middle" open={!isNull(name)}>
       <form method="dialog" className="modal-box">
         {name && <PlayerModalContent name={name} />}
       </form>

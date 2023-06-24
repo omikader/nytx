@@ -22,6 +22,7 @@ export const PlayerStats = ({ playerData }: IProps) => {
         <div className="stat-figure">
           <InfoIcon />
         </div>
+
         <div className="stat-title">Games Played</div>
         <div className="stat-value">{gamesPlayed}</div>
         {lastPlay && <div className="stat-desc">{gamesPlayedMsg}</div>}
