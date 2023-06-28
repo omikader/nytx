@@ -1,8 +1,9 @@
-import { Cell, Pie, PieChart, Tooltip } from "recharts";
+import { Cell, Legend, Pie, PieChart } from "recharts";
 import { map } from "lodash";
 import { useQuery } from "@apollo/client";
 
 import { ApolloErrorToast, Spinner } from "../../components";
+import { InfoIcon } from "../../svg";
 import { graphql } from "../../gql";
 
 const HEAD_TO_HEAD_QUERY_DOCUMENT = graphql(`
@@ -34,33 +35,41 @@ export const HeadToHeadChart = ({ name1, name2, excludeMidis }: IProps) => {
     return <Spinner />;
   }
 
-  const formatted = [
-    {
-      name: `${name1} wins`,
-      value: data.headToHead.wins,
-      color: "hsl(var(--p)",
-    },
-    { name: "Ties", value: data.headToHead.ties, color: "hsl(var(--a)" },
-    {
-      name: `${name2} wins`,
-      value: data.headToHead.losses,
-      color: "hsl(var(--s)",
-    },
+  const {
+    headToHead: { wins, losses, ties },
+  } = data;
+
+  if (wins + losses + ties === 0) {
+    return (
+      <div className="alert">
+        <InfoIcon />
+        <span>No data</span>
+      </div>
+    );
+  }
+
+  const cellData = [
+    { name: `${name1} wins`, value: wins, color: "hsl(var(--p))" },
+    { name: `${name2} wins`, value: losses, color: "hsl(var(--s))" },
+    { name: "Ties", value: ties, color: "hsl(var(--a))" },
   ];
 
   return (
-    <PieChart width={250} height={250}>
-      <Tooltip />
+    <PieChart width={250} height={250} className="text-sm">
+      <Legend verticalAlign="top" />
 
       <Pie
         dataKey="value"
-        data={formatted}
-        innerRadius={60}
-        outerRadius={80}
+        data={cellData}
+        innerRadius={70}
+        outerRadius={90}
+        cy="75%"
+        startAngle={0}
+        endAngle={180}
         label={true}
       >
-        {map(formatted, ({ name, color }) => (
-          <Cell key={name} fill={color} />
+        {map(cellData, ({ name, color }) => (
+          <Cell key={name} fill={color} style={{ outline: "none" }} />
         ))}
       </Pie>
     </PieChart>

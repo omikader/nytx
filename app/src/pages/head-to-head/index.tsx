@@ -26,7 +26,7 @@ export const Component = () => {
             <>
               <div className="divider md:divider-horizontal" />
 
-              <div className="grow">
+              <div>
                 <HeadToHeadChart
                   name1={name1}
                   name2={name2}

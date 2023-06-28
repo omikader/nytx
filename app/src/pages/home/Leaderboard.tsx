@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 import { PlayerModal } from "./PlayerModal";
 import { PuzzleContextType } from "../../contexts";
@@ -9,9 +9,16 @@ interface IProps {
 
 export const Leaderboard = ({ data }: IProps) => {
   const [name, setName] = useState<string | null>(null);
+  const ref = useRef<HTMLDialogElement | null>(null);
+
+  const handleOpen = (name: string) => {
+    setName(name);
+    ref.current?.showModal();
+  };
 
   const handleClose = () => {
     setName(null);
+    ref.current?.close();
   };
 
   return (
@@ -30,7 +37,10 @@ export const Leaderboard = ({ data }: IProps) => {
             <tr key={name}>
               <td>{rank}</td>
               <td>
-                <a className="link link-accent" onClick={() => setName(name)}>
+                <a
+                  className="link link-accent"
+                  onClick={() => handleOpen(name)}
+                >
                   {name}
                 </a>
               </td>
@@ -40,7 +50,7 @@ export const Leaderboard = ({ data }: IProps) => {
         </tbody>
       </table>
 
-      <PlayerModal name={name} handleClose={handleClose} />
+      <PlayerModal name={name} handleClose={handleClose} modalRef={ref} />
     </>
   );
 };

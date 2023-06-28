@@ -33,7 +33,7 @@ export const useTimer = ({ date }: IProps) => {
     };
 
     setTimeout(countdown, 1000);
-  }, [referenceTime, setReferenceTime, setDifference]);
+  }, [referenceTime, setReferenceTime, setDifference, refetch]);
 
   return {
     days: Math.floor(difference / ONE_DAY_IN_MS),
