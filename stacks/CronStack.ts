@@ -9,7 +9,7 @@ export const CronStack = ({ stack }: StackContext) => {
 
   const lambda = new Function(stack, "Lambda", {
     handler: "packages/functions/cron/index.handler",
-    runtime: "python3.8",
+    runtime: "python3.11",
     bind: [table, NYT_S],
   });
 
