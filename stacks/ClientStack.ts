@@ -12,13 +12,11 @@ export const ClientStack = ({ app, stack }: StackContext) => {
     environment: {
       VITE_API_URL: api.customDomainUrl ?? api.url,
     },
-    ...(app.stage === "prod" && {
-      customDomain: {
-        domainName: "nytx.omikader.com",
-        domainAlias: "www.nytx.omikader.com",
-        hostedZone: "omikader.com",
-      },
-    }),
+    customDomain: {
+      domainName: "nytx.omikader.com",
+      domainAlias: "www.nytx.omikader.com",
+      hostedZone: "omikader.com",
+    },
   });
 
   stack.addOutputs({ SiteUrl: site.customDomainUrl ?? site.url });
