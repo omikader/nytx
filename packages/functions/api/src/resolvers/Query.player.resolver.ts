@@ -8,7 +8,7 @@ export const player: QueryResolvers["player"] = async (
   { name, excludeMidis },
   { dataSources }
 ) => {
-  const end = new Date().toLocaleDateString("en-US", { timeZone: ZONE });
+  const end = new Date().toLocaleDateString("en-CA", { timeZone: ZONE });
 
   const [player, scores] = await Promise.all([
     dataSources.dynamoAPI.fetchPlayerByName(name),
