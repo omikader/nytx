@@ -8,22 +8,22 @@ export const activeLeaderboard: QueryResolvers["activeLeaderboard"] = async (
 ) => {
   const root = await dataSources.newYorkTimesAPI.fetchLeaderboard();
 
-  const date = root.querySelector(".lbd-type__date")?.innerText;
-  if (!date) {
+  const pzContent = root
+    .querySelector(".pz-content")
+    ?.querySelector("script")?.innerHTML;
+
+  if (!pzContent) {
     return [];
   }
 
-  const scores = root.querySelectorAll(".lbd-score");
-  return scores.map((score) => {
-    const name = score.querySelector(".lbd-score__name")?.innerText ?? "";
-    const rank = score.querySelector(".lbd-score__rank")?.innerText ?? "•";
-    const time = score.querySelector(".lbd-score__time")?.innerText ?? "--";
+  const data = JSON.parse(pzContent.split(" = ")[1]);
+  return data.scoreList.map((score: any) => {
     return {
-      name: name.substring(0, name.lastIndexOf(" ")),
-      date,
-      time,
-      rank,
-      seconds: fromHHMMSS(time),
+      name: score.name,
+      date: data.displayDate,
+      time: score.solveTime ?? "--",
+      rank: score.rank ?? "•",
+      seconds: fromHHMMSS(score.solveTime),
     };
   });
 };

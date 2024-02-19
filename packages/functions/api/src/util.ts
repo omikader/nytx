@@ -17,6 +17,10 @@ export const toHHMMSS = (seconds: number): string => {
     .otherwise(() => date.toISOString().substring(11, 16));
 };
 
-export const fromHHMMSS = (time: string): number => {
-  return time.split(":").reduce((acc, time) => 60 * acc + +time, 0);
+export const fromHHMMSS = (time: string | null): number => {
+  if (time === null) {
+    return -1;
+  }
+
+  return time.split(":").reduce((acc, segment) => 60 * acc + +segment, 0);
 };

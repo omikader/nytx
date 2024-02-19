@@ -4,14 +4,14 @@
   "private": true,
   "devDependencies": {
     "@types/lodash": "^4.14.194",
-    "@types/luxon": "^3.3.0"
+    "@types/luxon": "^3.3.0",
+    "@types/node": "20.11.17"
   },
   "dependencies": {
     "@apollo/server": "^4.7.1",
     "@as-integrations/aws-lambda": "^2.0.1",
     "@aws-sdk/client-dynamodb": "^3.348.0",
     "@aws-sdk/util-dynamodb": "^3.348.0",
-    "got": "^12.6.0",
     "graphql": "16.6.0",
     "graphql-scalars": "^1.22.0",
     "graphql-tag": "^2.12.6",

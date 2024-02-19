@@ -1,3 +1,4 @@
+import json
 from dataclasses import dataclass
 from datetime import datetime
 from typing import List, Tuple
@@ -32,29 +33,26 @@ def scrape() -> Tuple[datetime, List[Score]]:
     soup = BeautifulSoup(response.text, "html.parser")
 
     # Parse the date
-    puzzle_date = soup.find("h3", "lbd-type__date").string
-    date = datetime.strptime(puzzle_date, "%A, %B %d, %Y")
+    pz_content = soup.find("div", class_="pz-content").find("script").string
+    data = json.loads(pz_content.split(" = ")[1])
+    date = datetime.strptime(data["displayDate"], "%A, %B %d, %Y")
 
     # Parse the scores
     scores = []
-    for score in soup.find_all("div", class_="lbd-score"):
-        name_tag = score.find("p", class_="lbd-score__name")
-        name = (name_tag.string or next(name_tag.children)).rstrip()
+    for score in data["scoreList"]:
+        name = score["name"]
 
-        if (
-            "no-rank" in score.attrs["class"]
-            or score.find("a", class_="lbd-score__link") is not None
-        ):
+        if not score["finished"]:
             dynamo.clear_player_streak(name)
         else:
-            time = score.find("p", class_="lbd-score__time").string
+            time = score["solveTime"]
             seconds = sum(
                 int(segment) * 60**i
                 for i, segment in enumerate(reversed(time.split(":")))
             )
 
             try:
-                rank = int(score.find("p", class_="lbd-score__rank").string)
+                rank = int(score["rank"])
             except TypeError:  # Tie, rank is same as previous player
                 rank = scores[-1].rank
 
