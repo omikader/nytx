@@ -3,21 +3,21 @@
   "version": "0.1.0",
   "private": true,
   "devDependencies": {
-    "@types/lodash": "4.14.194",
-    "@types/luxon": "3.3.0",
+    "@types/lodash": "^4.14.194",
+    "@types/luxon": "^3.3.0",
     "@types/node": "20.11.17"
   },
   "dependencies": {
-    "@apollo/server": "4.7.1",
-    "@as-integrations/aws-lambda": "2.0.1",
-    "@aws-sdk/client-dynamodb": "3.348.0",
-    "@aws-sdk/util-dynamodb": "3.348.0",
+    "@apollo/server": "^4.7.1",
+    "@as-integrations/aws-lambda": "^2.0.1",
+    "@aws-sdk/client-dynamodb": "^3.348.0",
+    "@aws-sdk/util-dynamodb": "^3.348.0",
     "graphql": "16.6.0",
-    "graphql-scalars": "1.22.0",
-    "graphql-tag": "2.12.6",
-    "lodash": "4.17.21",
-    "luxon": "3.3.0",
-    "node-html-parser": "6.1.5",
-    "ts-pattern": "5.0.1"
+    "graphql-scalars": "^1.22.0",
+    "graphql-tag": "^2.12.6",
+    "lodash": "^4.17.21",
+    "luxon": "^3.3.0",
+    "node-html-parser": "^6.1.5",
+    "ts-pattern": "^5.0.1"
   }
 }

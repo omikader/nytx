@@ -8,6 +8,10 @@
     "deploy": "sst deploy",
     "remove": "sst remove"
   },
+  "workspaces": [
+    "app",
+    "packages/**"
+  ],
   "devDependencies": {
     "@tsconfig/node18": "18.2.2",
     "@types/node": "20.11.17",
